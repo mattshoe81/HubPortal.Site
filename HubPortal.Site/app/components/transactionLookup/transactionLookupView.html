@@ -1,0 +1,592 @@
+﻿<div ng-show="vm.formModels.transactions.length > 0">
+
+    <hp-pager current-page-model="vm.currentPage"
+              item-count="vm.formModels.transactions.length"
+              items-per-page="vm.formModels.transactionsPerPage"
+              ng-show="vm.formModels.transactions.length > vm.formModels.transactionsPerPage">
+    </hp-pager>
+    <div class="table-container table-header-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="process-column"
+                        ng-click="vm.transactionSortCriteria === '-processName' ? vm.transactionSortCriteria = '+processName' : vm.transactionSortCriteria = '-processName'">
+                        Process
+                    </th>
+                    <th class="type-column"
+                        ng-click="vm.transactionSortCriteria === '-transactionTypeName' ? vm.transactionSortCriteria = '+transactionTypeName' : vm.transactionSortCriteria = '-transactionTypeName'">
+                        Transaction Type
+                    </th>
+                    <th class="start-time-column"
+                        ng-click="vm.transactionSortCriteria === '-startTime' ? vm.transactionSortCriteria = '+startTime' : vm.transactionSortCriteria = '-startTime'">
+                        Start Time
+                    </th>
+                    <th class="checkpoints-column"
+                        ng-click="vm.transactionSortCriteria === '-checkpointCount' ? vm.transactionSortCriteria = '+checkpointCount' : vm.transactionSortCriteria = '-checkpointCount'">
+                        Checkpoints
+                    </th>
+                    <th class="elapsed-column"
+                        ng-click="vm.transactionSortCriteria === '-totalElapsedTime' ? vm.transactionSortCriteria = '+totalElapsedTime' : vm.transactionSortCriteria = '-totalElapsedTime'">
+                        Elapsed Time (s)
+                    </th>
+                    <th class="success-column"
+                        ng-click="vm.transactionSortCriteria === '-successful' ? vm.transactionSortCriteria = '+successful' : vm.transactionSortCriteria = '-successful'">
+                        Successful?
+                    </th>
+                    <th class="ping-column"
+                        ng-click="vm.transactionSortCriteria === '-pingFlag' ? vm.transactionSortCriteria = '+pingFlag' : vm.transactionSortCriteria = '-pingFlag'">
+                        Ping?
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="table-content table-container">
+        <table>
+            <tbody>
+                <tr ng-repeat="transaction in vm.formModels.transactions 
+                                | filter: q 
+                                | startFrom: vm.currentPage * vm.formModels.transactionsPerPage 
+                                | limitTo: vm.formModels.transactionsPerPage
+                                | orderBy: vm.transactionSortCriteria">
+                    <td class="process-column">
+                        {{transaction.processName}}
+                    </td>
+                    <td class="type-column">
+                        {{transaction.transactionTypeName}}
+                    </td>
+                    <td class="start-time-column">
+                        {{transaction.transactionTime}}
+                    </td>
+                    <td class="checkpoints-column">
+                        {{transaction.checkpointCount}}
+                    </td>
+                    <td class="elapsed-column">
+                        {{transaction.totalElapsedTime}}
+                    </td>
+                    <td class="success-column">
+                        {{transaction.successful}}
+                    </td>
+                    <td class="ping-column">
+                        {{transaction.pingFlag}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h5 class="notification"
+            ng-show="vm.formModels.transactions.length === 1 && vm.formModels.transactions[0] === ''">
+            No results to display
+        </h5>
+    </div>
+</div>
+
+<form>
+    <div>
+        <div id="parameters-section" class="title-panel">
+            Search Parameters
+        </div>
+
+        <div class="form-section tabbed">
+            <hp-tab-set>
+                <hp-tab heading="Process"
+                        tab-click="vm.setSearchType(value)"
+                        click-param="process">
+
+                    <div id="process">
+                        <div>
+                            <div class="label">
+                                <span>Process</span>
+                            </div>
+
+                            <select name="process"
+                                    ng-model="vm.formModels.process">
+                                <option value="All" selected>--All--</option>
+                                <option value="{{process}}" ng-repeat="process in vm.processList | unique: 'process'">{{process}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </hp-tab>
+
+                <hp-tab heading="Client"
+                        tab-click="vm.setSearchType(value)"
+                        click-param="client">
+
+                    <div id="client">
+                        <div>
+                            <div class="label">
+                                <span>Client</span>
+                            </div>
+                            <select ng-model="vm.formModels.client">
+                                <option value="All" selected>--All--</option>
+                                <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client'">{{client}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </hp-tab>
+
+                <hp-tab heading="Source"
+                        tab-click="vm.setSearchType(value)"
+                        click-param="source">
+
+                    <div id="source">
+                        <div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="label">
+                                        <span>Source</span>
+                                    </div>
+                                    <select ng-model="vm.formModels.source">
+                                        <option value="All" ng-selected="selected">--All--</option>
+                                        <option value="{{process}}" ng-repeat="client in vm.clientList | unique: 'client'">{{client}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <div class="label">
+                                        <span>Destination</span>
+                                    </div>
+                                    <div>
+                                        <select ng-model="vm.formModels.destination">
+                                            <option value="All" selected>--All--</option>
+                                            <option value="{{client}}" ng-repeat="client in vm.clientList | unique: client">{{client}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="label">
+                                        <span>Transaction Type</span>
+                                    </div>
+                                    <div>
+                                        <select ng-model="vm.formModels.transactionType">
+                                            <option value="All" selected>--All--</option>
+                                            <option value="{{transactionType}}" ng-repeat="transactionType in vm.transactionTypeList | unique: transactionType">{{transactionType}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </hp-tab>
+            </hp-tab-set>
+        </div>
+    </div>
+
+    <div>
+        <div id="refine-title" class="title-panel">
+            <button type="button" data-toggle="collapse" data-target="#details" aria-expanded="true">Transaction Details</button>
+        </div>
+        <div id="details" 
+             class="collapse show">
+            <div id="refine-section"
+                 class="form-section">
+                <div class="row">
+                    <div class="col-6 right-border">
+                        <div class="padded-section">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="label">
+                                        Start Date
+                                    </div>
+                                    <input type="date" ng-model="vm.formModels.startDate" />
+                                </div>
+                                <div class="col-6">
+                                    <div class="label">
+                                        End Date
+                                    </div>
+                                    <input type="date" ng-model="vm.formModels.endDate" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="padded-section">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="label">
+                                        Start Time
+                                    </div>
+                                    <input type="time" ng-model="vm.formModels.startTime" />
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="label">
+                                        End Time
+                                    </div>
+                                    <input type="time" ng-model="vm.formModels.endTime" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="row">
+                    <div class="col-6 right-border">
+                        <div class="padded-section">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="label">
+                                        Min Elapsed Time (s)
+                                    </div>
+                                    <input type="number" ng-model="vm.formModels.minTime" />
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="label">
+                                        Max Elapsed Time (s)
+                                    </div>
+                                    <input type="number" ng-model="vm.formModels.maxTime" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6 right-border">
+                                <div class="padded-section">
+                                    <div class="label">
+                                        Ping Options
+                                    </div>
+                                    <select ng-model="vm.formModels.pingOptions">
+                                        <option value="0">All Transactions</option>
+                                        <option value="1">Only Pings</option>
+                                        <option value="2">Exclude Pings</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="padded-section">
+                                    <div class="label">
+                                        Success Status
+                                    </div>
+                                    <select ng-model="vm.formModels.failed">
+                                        <option value="-1">--All--</option>
+                                        <option value="1">Successful</option>
+                                        <option value="0">Unknown</option>
+                                        <option value="2">Unsuccessful</option>
+                                        <option value="3">Unsuccessful &amp; Unknown</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Server Name
+                        </div>
+                        <input type="text" ng-model="vm.formModels.serverName" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Session ID
+                        </div>
+                        <input type="text" ng-model="vm.formModels.sessionID" />
+                    </div>
+
+                    <div class="col-6">
+                        <div class="label v-middle">
+                            Ignore High Frequency Transactions?
+                            <input style="margin-left: 15px;"
+                                   type="checkbox"
+                                   name="ignore"
+                                   checked
+                                   ng-model="vm.formModels.ignore">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+
+    <div class="title-panel">
+        <button type="button" data-toggle="collapse" data-target="#lookup-section">Lookup</button>
+    </div>
+
+    <div id="lookup-section"
+         class="form-section tabbed collapse">
+
+        <hp-tab-set>
+            <hp-tab heading="Coverage"
+                    tab-click="vm.setLookupType(value)"
+                    click-param="coverage">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Policy Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.policyNumber" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Claim Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.claimNumber" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Referral Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.referralNumber" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            FNOL Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.fnolNumber" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            CSR
+                        </div>
+                        <input type="text" ng-model="vm.formModels.csr" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Sub-Company
+                        </div>
+                        <input type="text" ng-model="vm.formModels.subCompany" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Referral Date
+                        </div>
+                        <input type="date" ng-model="vm.formModels.referralDate" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Part Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.partNumber" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Zip Code
+                        </div>
+                        <input type="text" ng-model="vm.formModels.zipCode" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Car ID
+                        </div>
+                        <input type="text" ng-model="vm.formModels.carID" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Promo Code
+                        </div>
+                        <input type="text" ng-model="vm.formModels.promoCode" />
+                    </div>
+                </div>
+            </hp-tab>
+
+            <hp-tab heading="Credit Card"
+                    tab-click="vm.setLookupType(value)"
+                    click-param="creditCard">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Card Number(last 4)
+                        </div>
+                        <input type="number" ng-model="vm.formModels.creditCardNumber" />
+                    </div>
+                    <div class="col-3">
+                        <div class="label">
+                            Amount
+                        </div>
+                        <input type="number" ng-model="vm.formModels.amount" />
+                    </div>
+                    <div class="col-3">
+                        <div class="label">
+                            CTU
+                        </div>
+                        <input type="text" ng-model="vm.formModels.ctu" />
+                    </div>
+                    <div class="col-3">
+                        <div class="label">
+                            Work Order Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.workOrderNumber" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Authorization Code
+                        </div>
+                        <input type="text" ng-model="vm.formModels.authorizationCode" />
+                    </div>
+                    <div class="col-3">
+                        <div class="label">
+                            Work Order Id
+                        </div>
+                        <input type="text" ng-model="vm.formModels.workOrderID" />
+                    </div>
+                </div>
+            </hp-tab>
+
+            <hp-tab heading="Wholesale"
+                    tab-click="vm.setLookupType(value)"
+                    click-param="wholesale">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Account Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.accountNumber" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Warehouse Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.warehouseNumber" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Order ID
+                        </div>
+                        <input type="text" ng-model="vm.formModels.orderID" />
+                    </div>
+                </div>
+            </hp-tab>
+
+            <hp-tab heading="Shop"
+                    tab-click="vm.setLookupType(value)"
+                    click-param="shop">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Invoice Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.invoiceNumber" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Shop Number
+                        </div>
+                        <input type="text" ng-model="vm.formModels.shopNumber" />
+                    </div>
+                </div>
+            </hp-tab>
+
+            <hp-tab heading="Generic"
+                    tab-click="vm.setLookupType(value)"
+                    click-param="generic">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Search String
+                        </div>
+                        <input type="text" ng-model="vm.formModels.genericSearchString" />
+                    </div>
+
+                    <div class="col-3">
+                        <div class="label">
+                            Checkpoint
+                        </div>
+                        <select ng-model="vm.formModels.checkpoint">
+                            <option value="1">--All--</option>
+                            <option value="INBOUND_REQUEST">Inbound Request</option>
+                            <option value="OUTBOUND_REQUEST">Outbound Request</option>
+                            <option value="INBOUND_RESPONSE">Inbound Response</option>
+                            <option value="OUTBOUND_RESPONSE">Outbound Response</option>
+                            <option value="INTRAHUB_REQUEST">Intra hub Request</option>
+                            <option value="INTRAHUB_RESPONSE">Intra hub Response</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="label v-middle">
+                            Exclude search string from transaction?
+                            <input style="margin-left: 15px;"
+                                   type="checkbox"
+                                   ng-model="vm.formModels.includeGenericStringInTransaction"
+                                   checked>
+                        </div>
+                    </div>
+                </div>
+            </hp-tab>
+        </hp-tab-set>
+    </div>
+
+    <div>
+        <div class="title-panel">
+            <button type="button" data-toggle="collapse" data-target="#output" aria-expanded="false">Output</button>
+        </div>
+        <div id="output" 
+             class="collapse">
+            <div id="output-section"
+                 class="form-section">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="label">
+                            Full Listing:
+                            <input style="margin-left: 15px;"
+                                   type="radio"
+                                   name="fullListing"
+                                   value="true"
+                                   ng-model="vm.formModels.fullListing">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="label">
+                            Count Only:
+                            <input style="margin-left: 15px;"
+                                   type="radio"
+                                   name="fullListing"
+                                   value="false"
+                                   ng-model="vm.formModels.fullListing">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="label">
+                            Transactions Per Page: &nbsp;
+                            <select ng-model="vm.formModels.transactionsPerPage" ng-change="vm.updatePagination()">
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="250">250</option>
+                                <option value="500">500</option>
+                                <option value="1000">1000</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+
+    <div id="submit-panel" class="text-center">
+        <button id="submit-button" class="btn btn-submit"
+                ng-click="vm.submit()">
+            Submit
+        </button>
+    </div>
+</form>

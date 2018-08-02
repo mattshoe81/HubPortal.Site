@@ -1,0 +1,19 @@
+﻿<div class="tabs">
+
+    <div class="tab pad-tab">
+    </div>
+
+    <div class="tab"
+         ng-repeat="tab in tabset.tabs"
+         ng-click="tab.tabClick({value: tab.clickParam}); tabset.activateTab(tab);"
+         ng-class="{'selected-tab': tab.active}">
+        {{tab.heading}}
+    </div>
+
+    <div class="tab filler-tab">
+    </div>
+</div>
+<div class="tab-content">
+    <ng-transclude>
+    </ng-transclude>
+</div>

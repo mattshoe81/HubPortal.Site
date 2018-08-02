@@ -1,0 +1,54 @@
+﻿<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <button class="btn btn-page"
+                    ng-disabled="pager.currentPageModel == 0"
+                    ng-click="pager.currentPageModel = pager.currentPageModel - 1; pager.adjustPagers()">
+                Previous
+            </button>
+        </li>
+        <li class="page-item"
+            ng-show="pager.currentPageModel >= 10"
+            ng-click="pager.adjustCurrentPage(0)">
+            <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item"
+            ng-show="pager.currentPageModel >= 10">
+            <a class="page-link"
+               ng-click="pager.adjustCurrentPage((pager.pagerStart - 1) * 10)"
+               href="#">
+                <i class="fa fa-chevron-left"></i>
+            </a>
+        </li>
+        <li class="page-item"
+            ng-repeat="item in pager.data | pager: pager.pagerStart * 10 | limitTo: 10"
+            ng-class="{disabled: pager.currentPageModel === pager.data.indexOf(item)}"
+            ng-show="pager.data.indexOf(item) < (pager.itemCount / pager.itemsPerPage)">
+            <a class="page-link"
+               ng-click="pager.adjustCurrentPage(pager.data.indexOf(item))"
+               href="#">{{pager.data.indexOf(item) + 1
+        }}</a>
+        </li>
+        <li class="page-item"
+            ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10) - 10)">
+            <a class="page-link"
+               ng-click="pager.adjustCurrentPage((pager.pagerStart + 1) * 10)"
+               href="#">
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </li>
+        <li class="page-item"
+            ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10) - 10)">
+            <a class="page-link"
+               ng-click="pager.adjustCurrentPage(pager.numberOfPages - 1)"
+               href="#">{{pager.numberOfPages}}</a>
+        </li>
+        <li class="page-item">
+            <button class="btn btn-page"
+                    ng-disabled="pager.currentPageModel === pager.numberOfPages - 1"
+                    ng-click="pager.currentPageModel = pager.currentPageModel+1; pager.adjustPagers()">
+                Next
+            </button>
+        </li>
+        </ul>
+</nav>
