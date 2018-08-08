@@ -8,140 +8,84 @@
                 "ProcessList",
                 "ClientList",
                 "TransactionTypeList",
-                "$http",
-                // filter and scope needed for pagination
-                "$filter",
-                "$scope",
                 TransactionLookupCtrl
             ]);
 
-    function TransactionLookupCtrl(ProcessList, ClientList, TransactionTypeList, $http, $filter, $scope) {
+    function TransactionLookupCtrl(ProcessList, ClientList, TransactionTypeList) {
         var vm = this;
-
-        vm.searchType = "process";
-        vm.title = "The Main Page"
         vm.processList = ProcessList;
         vm.clientList = ClientList;
         vm.transactionTypeList = TransactionTypeList;
-        vm.noResults = false;
-
-        vm.hideTransactionDetails = false;
-        vm.hideLookup = true;
-        vm.hideOutput = true;
-
-        vm.setSearchType = function (searchType) {
-            vm.formModels.searchType = searchType;
-        };
-        vm.setLookupType = function (lookupType) {
-            vm.formModels.lookupType = lookupType;
-        }
+        // Passed into the tabset directive
+        vm.setSearchType = function (searchType) { vm.form.searchType = searchType; };
+        // Passed into the tabset directive
+        vm.setLookupType = function (lookupType) { vm.form.lookupType = lookupType; };
+        // The order in which the transactions appear in the paginated list. Used in the ng-repeat orderBy filter
         vm.transactionSortCriteria = '+processName';
+        // Current page of the pagination. Used in the ng-repeat startFrom filter to determine the starting index
+        // of the results to display
+        vm.currentPage = 0;
 
         // Angularjs doesn't play nice with date inputs, so have to do some work
+        // to make the dates adhere to the correct format. Probably a cleaner way to do it somehow. Meh.
         var date = new Date();
         var startDate = new Date(date.setMonth(date.getMonth() - 3));
         date = new Date();
         var startTime = new Date(date.setHours(date.getHours() - 2));
-        var endTime = new Date();
-        vm.formModels = {
-            transactions: [],
-            searchType: "process",
-            process: "All",
-            client: "All",
-            source: "All",
-            destination: "All",
-            transactionType: "All",
-            startDate: startDate,
-            endDate: new Date(),
-            startTime: new Date(startTime.getFullYear(), startTime.getMonth(), startTime.getDate(), startTime.getHours(), startTime.getMinutes(), 0),
-            endTime: new Date(endTime.getFullYear(), endTime.getMonth(), endTime.getDate(), endTime.getHours(), endTime.getMinutes(), 0),
-            minTime: "",
-            maxTime: "",
-            pingOptions: "0",
-            failed: "-1",
-            fnolNumber: "",
-            serverName: "",
-            sessionID: "",
-            ignore: "",
-            policyNumber: "",
-            referralNumber: "",
-            csr: "",
-            referralDate: new Date(),
-            zipCode: "",
-            promoCode: "",
-            creditCardNumber: "",
-            ctu: "",
-            authorizationCode: "",
+        vm.form = {
             accountNumber: "",
-            orderID: "",
-            invoiceNumber: "",
+            amount: "",
+            authorizationCode: "",
+            carID: "",
+            checkpoint: "All",
+            claimNumber: "",
+            client: "All",
+            creditCardNumber: "",
+            csr: "",
+            ctu: "",
+            destination: "All",
+            // C# only likes the dates to be in this format?
+            endTime: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate(), (new Date()).getHours(), (new Date()).getMinutes(), 0),
+            failed: "",
+            fnolNumber: "",
+            fullListing: "true",
             genericSearchString: "",
             includeGenericStringInTransaction: "",
-            claimNumber: "",
-            subCompany: "",
+            invoiceNumber: "",
+            lookupType: "coverage",
+            maxTime: "",
+            minTime: "",
+            orderID: "",
             partNumber: "",
-            carID: "",
-            amount: "",
-            workOrderNumber: "",
-            workOrderID: "",
-            warehouseNumber: "",
+            pingOptions: "",
+            policyNumber: "",
+            process: "All",
+            promoCode: "",
+            referralDate: undefined,
+            referralNumber: "",
+            searchType: "process",
+            serverName: "",
+            sessionID: "",
             shopNumber: "",
-            checkpoint: "1",
-            fullListing: "true",
-            pagination: true,
+            source: "All",
+            // C# only likes the dates to be in this format?
+            startTime: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), startTime.getHours(), startTime.getMinutes(), 0),
+            subCompany: "",
+            transactions: [],
             transactionsPerPage: "25",
-            lookupType: "generic"
+            transactionType: "All",
+            warehouseNumber: "",
+            workOrderID: "",
+            workOrderNumber: "",
+            zipCode: ""
         }
-
-        /*
-         * Pagination Stuff
-         */
-        vm.currentPage = 0;
-        vm.data = [];
-        vm.q = '';
-        vm.getData = function () {
-            return $filter('filter')(vm.data, vm.q);
+        vm.onSubmit = function () {
+            if (!vm.form.amount) vm.form.amount = 0;
         }
-        $scope.$watch('q', function (newValue, oldValue) {
-            if (oldValue != newValue) {
-                vm.currentPage = 0;
-            }
-        }, true);
-
-        vm.submit = function () {
-            var button = document.getElementById("submit-button");
-            button.disabled = true;
-            button.textContent = "Loading...";
-            $http({
-                method: 'POST',
-                url: "http://localhost:55626/api/TransactionLookup/Post",
-                data: vm.formModels,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(
-                function (response) {
-                    // Angularjs refuses to allow strings to model for date inputs, 
-                    // so must convert the response data before updating models
-                    startTime = new Date(response.data.startTime);
-                    endTime = new Date(response.data.endTime);
-                    response.data.startTime = new Date(startTime.getFullYear(), startTime.getMonth(), startTime.getDate(), startTime.getHours(), startTime.getMinutes(), 0)
-                    response.data.endTime = new Date(endTime.getFullYear(), endTime.getMonth(), endTime.getDate(), endTime.getHours(), endTime.getMinutes(), 0);
-                    response.data.startDate = new Date(response.data.startDate);
-                    response.data.endDate = new Date(response.data.endDate);
-                    response.data.referralDate = new Date(response.data.referralDate);
-                    vm.formModels = response.data;
-                    if (vm.formModels.transactions.length < 1) {
-                        vm.formModels.transactions.push("");
-                    }
-                    button.disabled = false;
-                    button.textContent = "Submit";
-                },
-                function (error) {
-                    console.log("Post Error", error);
-                    button.disabled = false;
-                    button.textContent = "Submit";
-                });
+        vm.onSubmitResponse = function (response) {
+            if (!response.data.amount) response.data.amount = "";
+            if (response.data.length < 1) response.data.push("");
+            vm.form.transactions = response.data;
         }
     }
 }());

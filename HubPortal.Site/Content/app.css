@@ -98,6 +98,7 @@ body {
     cursor: pointer;
     border-top: 1px solid var(--inactive-tab-color);
 }
+
     .title-panel button {
         font-weight: bold;
         background-color: transparent;
@@ -109,6 +110,7 @@ body {
         text-align: left;
         cursor: pointer;
     }
+
         .title-panel button:focus {
             outline: none;
         }
@@ -157,6 +159,10 @@ div.divider {
     padding: 10px 0 20px 0;
 }
 
+#refine-section .padded-section {
+    padding: 10px 30px 20px 45px;
+}
+
 .right-border {
     border-right: 2px solid var(--header-color);
 }
@@ -183,14 +189,15 @@ form {
     padding: 10px 10px 10px 20px;
 }
 
-#refine-section {
+#refine-section.form-section {
+    padding: 0;
 }
 
-    #refine-section .label {
-    }
+#refine-section .label {
+}
 
-    #refine-section input {
-    }
+#refine-section input {
+}
 
 select {
     margin-bottom: 15px;
@@ -269,9 +276,21 @@ table {
     table-layout: fixed;
 }
 
+tr {
+    border-bottom: 2px solid var(--header-color);
+}
+
+    tr:last-child {
+        border: none;
+    }
+
+th {
+    cursor: pointer;
+}
+
 .table-content {
-    max-height:300px;
-    overflow-x:auto;
+    max-height: 300px;
+    overflow-x: auto;
     margin-top: 0px;
     border: 1px solid rgba(255,255,255,0.3);
     background-color: var(--inactive-tab-color);
@@ -285,47 +304,58 @@ table {
     padding: 5px 15px 5px 15px;
     border: 2px solid var(--header-color);
 }
-    .table-header-container {
-        background-color: var(--header-color);
-    }
-    .index-column {
-        width: 5%;
-        text-align: center;
-    }
-    .process-column {
-        width: 25%;
-    }
-    .type-column {
-        width: 20%;
-    }
-    .start-time-column {
-        width: 10%;
-    }
-    .checkpoints-column {
-        width: 10%;
-        text-align: center;
-    }
-    .elapsed-column {
-        width: 10%;
-        text-align: center;
-    }
-    .success-column {
-        width: 10%;
-        text-align: center;
-    }
-    .ping-column {
-        width: 10%;
-        text-align: center;
-    }
+
+.table-header-container {
+    background-color: var(--header-color);
+}
+
+.index-column {
+    width: 5%;
+    text-align: center;
+}
+
+.process-column {
+    width: 25%;
+}
+
+.type-column {
+    width: 20%;
+}
+
+.start-time-column {
+    width: 14%;
+}
+
+.checkpoints-column {
+    width: 10%;
+    text-align: center;
+}
+
+.elapsed-column {
+    width: 10%;
+    text-align: center;
+}
+
+.success-column {
+    width: 10%;
+    text-align: center;
+}
+
+.ping-column {
+    width: 6%;
+    text-align: center;
+}
 
 .btn-page {
     background-color: var(--header-color);
     border-radius: 0;
     width: 100px;
 }
+
     .btn-page:focus {
         box-shadow: none;
     }
+
     .btn-page:active {
         background-color: var(--inactive-tab-color);
     }
@@ -341,48 +371,54 @@ table {
 .page-item {
     background-color: var(--inactive-tab-color);
 }
+
     .page-item.disabled {
         background-color: var(--header-color);
         font-weight: bolder;
         text-decoration: underline;
     }
-    .page-item.disabled.inactive {
-        background-color: var(--inactive-tab-color);
-        font-weight: normal;
-        text-decoration: none;
-    }
-    .page-link {
-        background-color: transparent;
-        color: black;
-    }
+
+        .page-item.disabled.inactive {
+            background-color: var(--inactive-tab-color);
+            font-weight: normal;
+            text-decoration: none;
+        }
+
+.page-link {
+    background-color: transparent;
+    color: black;
+}
+
     .page-link:focus {
         box-shadow: none;
     }
-    .page-item.disabled .page-link {
-        background-color: transparent;
-    }
+
+.page-item.disabled .page-link {
+    background-color: transparent;
+}
 
 ul.pagination {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-
-
 #output {
     border: 2px solid var(--header-color);
 }
+
 #output-section {
     border: none;
 }
 
+.fa.fa-ellipsis-v {
+    margin-right: 25px;
+    font-size: 30px;
+    color: #343a40;
+    cursor: pointer;
+    margin-top: 5px;
+}
 
-
-
-
-
-
-
-
-
-
+.dropdown-menu {
+    padding: 25px;
+    white-space: nowrap;
+}

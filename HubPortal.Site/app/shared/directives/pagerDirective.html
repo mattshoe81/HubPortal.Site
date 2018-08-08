@@ -26,8 +26,11 @@
             ng-show="pager.data.indexOf(item) < (pager.itemCount / pager.itemsPerPage)">
             <a class="page-link"
                ng-click="pager.adjustCurrentPage(pager.data.indexOf(item))"
-               href="#">{{pager.data.indexOf(item) + 1
-        }}</a>
+               href="#">
+                {{
+pager.data.indexOf(item) + 1
+                }}
+            </a>
         </li>
         <li class="page-item"
             ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10) - 10)">
@@ -50,5 +53,5 @@
                 Next
             </button>
         </li>
-        </ul>
+    </ul>
 </nav>

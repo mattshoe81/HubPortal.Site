@@ -1,9 +1,9 @@
-﻿<div ng-show="vm.formModels.transactions.length > 0">
+﻿<div ng-show="vm.form.transactions.length > 0">
 
     <hp-pager current-page-model="vm.currentPage"
-              item-count="vm.formModels.transactions.length"
-              items-per-page="vm.formModels.transactionsPerPage"
-              ng-show="vm.formModels.transactions.length > vm.formModels.transactionsPerPage">
+              item-count="vm.form.transactions.length"
+              items-per-page="vm.form.transactionsPerPage"
+              ng-show="vm.form.transactions.length > vm.form.transactionsPerPage">
     </hp-pager>
     <div class="table-container table-header-container">
         <table>
@@ -44,10 +44,9 @@
     <div class="table-content table-container">
         <table>
             <tbody>
-                <tr ng-repeat="transaction in vm.formModels.transactions 
-                                | filter: q 
-                                | startFrom: vm.currentPage * vm.formModels.transactionsPerPage 
-                                | limitTo: vm.formModels.transactionsPerPage
+                <tr ng-repeat="transaction in vm.form.transactions
+                                | startFrom: vm.currentPage * vm.form.transactionsPerPage
+                                | limitTo: vm.form.transactionsPerPage
                                 | orderBy: vm.transactionSortCriteria">
                     <td class="process-column">
                         {{transaction.processName}}
@@ -74,7 +73,7 @@
             </tbody>
         </table>
         <h5 class="notification"
-            ng-show="vm.formModels.transactions.length === 1 && vm.formModels.transactions[0] === ''">
+            ng-show="vm.form.transactions.length === 1 && vm.form.transactions[0] === ''">
             No results to display
         </h5>
     </div>
@@ -99,7 +98,7 @@
                             </div>
 
                             <select name="process"
-                                    ng-model="vm.formModels.process">
+                                    ng-model="vm.form.process">
                                 <option value="All" selected>--All--</option>
                                 <option value="{{process}}" ng-repeat="process in vm.processList | unique: 'process'">{{process}}</option>
                             </select>
@@ -116,7 +115,7 @@
                             <div class="label">
                                 <span>Client</span>
                             </div>
-                            <select ng-model="vm.formModels.client">
+                            <select ng-model="vm.form.client">
                                 <option value="All" selected>--All--</option>
                                 <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client'">{{client}}</option>
                             </select>
@@ -135,9 +134,9 @@
                                     <div class="label">
                                         <span>Source</span>
                                     </div>
-                                    <select ng-model="vm.formModels.source">
+                                    <select ng-model="vm.form.source">
                                         <option value="All" ng-selected="selected">--All--</option>
-                                        <option value="{{process}}" ng-repeat="client in vm.clientList | unique: 'client'">{{client}}</option>
+                                        <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client'">{{client}}</option>
                                     </select>
                                 </div>
                                 <div class="col-4">
@@ -145,7 +144,7 @@
                                         <span>Destination</span>
                                     </div>
                                     <div>
-                                        <select ng-model="vm.formModels.destination">
+                                        <select ng-model="vm.form.destination">
                                             <option value="All" selected>--All--</option>
                                             <option value="{{client}}" ng-repeat="client in vm.clientList | unique: client">{{client}}</option>
                                         </select>
@@ -156,7 +155,7 @@
                                         <span>Transaction Type</span>
                                     </div>
                                     <div>
-                                        <select ng-model="vm.formModels.transactionType">
+                                        <select ng-model="vm.form.transactionType">
                                             <option value="All" selected>--All--</option>
                                             <option value="{{transactionType}}" ng-repeat="transactionType in vm.transactionTypeList | unique: transactionType">{{transactionType}}</option>
                                         </select>
@@ -174,101 +173,46 @@
         <div id="refine-title" class="title-panel">
             <button type="button" data-toggle="collapse" data-target="#details" aria-expanded="true">Transaction Details</button>
         </div>
-        <div id="details" 
+        <div id="details"
              class="collapse show">
             <div id="refine-section"
                  class="form-section">
                 <div class="row">
-                    <div class="col-6 right-border">
-                        <div class="padded-section">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="label">
-                                        Start Date
-                                    </div>
-                                    <input type="date" ng-model="vm.formModels.startDate" />
-                                </div>
-                                <div class="col-6">
-                                    <div class="label">
-                                        End Date
-                                    </div>
-                                    <input type="date" ng-model="vm.formModels.endDate" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="padded-section">
+                    <div class="col-6 right-border padded-section">
+                        <div class="">
                             <div class="row">
                                 <div class="col-6">
                                     <div class="label">
                                         Start Time
                                     </div>
-                                    <input type="time" ng-model="vm.formModels.startTime" />
+                                    <input type="datetime-local" ng-model="vm.form.startTime" />
                                 </div>
 
                                 <div class="col-6">
                                     <div class="label">
                                         End Time
                                     </div>
-                                    <input type="time" ng-model="vm.formModels.endTime" />
+                                    <input type="datetime-local" ng-model="vm.form.endTime" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="divider"></div>
-
-                <div class="row">
-                    <div class="col-6 right-border">
-                        <div class="padded-section">
+                    <div class="col-6 padded-section">
+                        <div class="">
                             <div class="row">
                                 <div class="col-6">
                                     <div class="label">
                                         Min Elapsed Time (s)
                                     </div>
-                                    <input type="number" ng-model="vm.formModels.minTime" />
+                                    <input type="number" ng-model="vm.form.minTime" />
                                 </div>
 
                                 <div class="col-6">
                                     <div class="label">
                                         Max Elapsed Time (s)
                                     </div>
-                                    <input type="number" ng-model="vm.formModels.maxTime" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="row">
-                            <div class="col-6 right-border">
-                                <div class="padded-section">
-                                    <div class="label">
-                                        Ping Options
-                                    </div>
-                                    <select ng-model="vm.formModels.pingOptions">
-                                        <option value="0">All Transactions</option>
-                                        <option value="1">Only Pings</option>
-                                        <option value="2">Exclude Pings</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="padded-section">
-                                    <div class="label">
-                                        Success Status
-                                    </div>
-                                    <select ng-model="vm.formModels.failed">
-                                        <option value="-1">--All--</option>
-                                        <option value="1">Successful</option>
-                                        <option value="0">Unknown</option>
-                                        <option value="2">Unsuccessful</option>
-                                        <option value="3">Unsuccessful &amp; Unknown</option>
-                                    </select>
+                                    <input type="number" ng-model="vm.form.maxTime" />
                                 </div>
                             </div>
                         </div>
@@ -278,35 +222,58 @@
                 <div class="divider"></div>
 
                 <div class="row">
-                    <div class="col-3">
-                        <div class="label">
-                            Server Name
+                    <div class="col-6 right-border padded-section">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="">
+                                    <div class="label">
+                                        Ping Options
+                                    </div>
+                                    <select ng-model="vm.form.pingOptions">
+                                        <option selected value="All">All Transactions</option>
+                                        <option value="Y">Only Pings</option>
+                                        <option value="N">Exclude Pings</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div>
+                                    <div class="label">
+                                        Success Status
+                                    </div>
+                                    <select ng-model="vm.form.failed">
+                                        <option selected value="All">--All--</option>
+                                        <option value="Y">Successful</option>
+                                        <option value="N">Unsuccessful</option>
+                                        <option value="null">Unknown</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <input type="text" ng-model="vm.formModels.serverName" />
                     </div>
 
-                    <div class="col-3">
-                        <div class="label">
-                            Session ID
-                        </div>
-                        <input type="text" ng-model="vm.formModels.sessionID" />
-                    </div>
+                    <div class="col-6 padded-section">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="label">
+                                    Server Name
+                                </div>
+                                <input type="text" ng-model="vm.form.serverName" />
+                            </div>
 
-                    <div class="col-6">
-                        <div class="label v-middle">
-                            Ignore High Frequency Transactions?
-                            <input style="margin-left: 15px;"
-                                   type="checkbox"
-                                   name="ignore"
-                                   checked
-                                   ng-model="vm.formModels.ignore">
+                            <div class="col-6">
+                                <div class="label">
+                                    Session ID
+                                </div>
+                                <input type="text" ng-model="vm.form.sessionID" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        
 
     <div class="title-panel">
         <button type="button" data-toggle="collapse" data-target="#lookup-section">Lookup</button>
@@ -314,7 +281,6 @@
 
     <div id="lookup-section"
          class="form-section tabbed collapse">
-
         <hp-tab-set>
             <hp-tab heading="Coverage"
                     tab-click="vm.setLookupType(value)"
@@ -324,28 +290,28 @@
                         <div class="label">
                             Policy Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.policyNumber" />
+                        <input type="text" ng-model="vm.form.policyNumber" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Claim Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.claimNumber" />
+                        <input type="text" ng-model="vm.form.claimNumber" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Referral Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.referralNumber" />
+                        <input type="text" ng-model="vm.form.referralNumber" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             FNOL Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.fnolNumber" />
+                        <input type="text" ng-model="vm.form.fnolNumber" />
                     </div>
                 </div>
                 <div class="row">
@@ -353,28 +319,28 @@
                         <div class="label">
                             CSR
                         </div>
-                        <input type="text" ng-model="vm.formModels.csr" />
+                        <input type="text" ng-model="vm.form.csr" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Sub-Company
                         </div>
-                        <input type="text" ng-model="vm.formModels.subCompany" />
+                        <input type="text" ng-model="vm.form.subCompany" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Referral Date
                         </div>
-                        <input type="date" ng-model="vm.formModels.referralDate" />
+                        <input type="date" ng-model="vm.form.referralDate" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Part Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.partNumber" />
+                        <input type="text" ng-model="vm.form.partNumber" />
                     </div>
                 </div>
 
@@ -383,21 +349,21 @@
                         <div class="label">
                             Zip Code
                         </div>
-                        <input type="text" ng-model="vm.formModels.zipCode" />
+                        <input type="text" ng-model="vm.form.zipCode" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Car ID
                         </div>
-                        <input type="text" ng-model="vm.formModels.carID" />
+                        <input type="text" ng-model="vm.form.carID" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Promo Code
                         </div>
-                        <input type="text" ng-model="vm.formModels.promoCode" />
+                        <input type="text" ng-model="vm.form.promoCode" />
                     </div>
                 </div>
             </hp-tab>
@@ -410,25 +376,25 @@
                         <div class="label">
                             Card Number(last 4)
                         </div>
-                        <input type="number" ng-model="vm.formModels.creditCardNumber" />
+                        <input type="number" ng-model="vm.form.creditCardNumber" />
                     </div>
                     <div class="col-3">
                         <div class="label">
                             Amount
                         </div>
-                        <input type="number" ng-model="vm.formModels.amount" />
+                        <input type="number" ng-model="vm.form.amount" />
                     </div>
                     <div class="col-3">
                         <div class="label">
                             CTU
                         </div>
-                        <input type="text" ng-model="vm.formModels.ctu" />
+                        <input type="text" ng-model="vm.form.ctu" />
                     </div>
                     <div class="col-3">
                         <div class="label">
                             Work Order Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.workOrderNumber" />
+                        <input type="text" ng-model="vm.form.workOrderNumber" />
                     </div>
                 </div>
 
@@ -437,13 +403,13 @@
                         <div class="label">
                             Authorization Code
                         </div>
-                        <input type="text" ng-model="vm.formModels.authorizationCode" />
+                        <input type="text" ng-model="vm.form.authorizationCode" />
                     </div>
                     <div class="col-3">
                         <div class="label">
                             Work Order Id
                         </div>
-                        <input type="text" ng-model="vm.formModels.workOrderID" />
+                        <input type="text" ng-model="vm.form.workOrderID" />
                     </div>
                 </div>
             </hp-tab>
@@ -456,21 +422,21 @@
                         <div class="label">
                             Account Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.accountNumber" />
+                        <input type="text" ng-model="vm.form.accountNumber" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Warehouse Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.warehouseNumber" />
+                        <input type="text" ng-model="vm.form.warehouseNumber" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Order ID
                         </div>
-                        <input type="text" ng-model="vm.formModels.orderID" />
+                        <input type="text" ng-model="vm.form.orderID" />
                     </div>
                 </div>
             </hp-tab>
@@ -483,14 +449,14 @@
                         <div class="label">
                             Invoice Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.invoiceNumber" />
+                        <input type="text" ng-model="vm.form.invoiceNumber" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Shop Number
                         </div>
-                        <input type="text" ng-model="vm.formModels.shopNumber" />
+                        <input type="text" ng-model="vm.form.shopNumber" />
                     </div>
                 </div>
             </hp-tab>
@@ -503,15 +469,15 @@
                         <div class="label">
                             Search String
                         </div>
-                        <input type="text" ng-model="vm.formModels.genericSearchString" />
+                        <input type="text" ng-model="vm.form.genericSearchString" />
                     </div>
 
                     <div class="col-3">
                         <div class="label">
                             Checkpoint
                         </div>
-                        <select ng-model="vm.formModels.checkpoint">
-                            <option value="1">--All--</option>
+                        <select ng-model="vm.form.checkpoint">
+                            <option value="All">--All--</option>
                             <option value="INBOUND_REQUEST">Inbound Request</option>
                             <option value="OUTBOUND_REQUEST">Outbound Request</option>
                             <option value="INBOUND_RESPONSE">Inbound Response</option>
@@ -526,7 +492,7 @@
                             Exclude search string from transaction?
                             <input style="margin-left: 15px;"
                                    type="checkbox"
-                                   ng-model="vm.formModels.includeGenericStringInTransaction"
+                                   ng-model="vm.form.includeGenericStringInTransaction"
                                    checked>
                         </div>
                     </div>
@@ -539,7 +505,7 @@
         <div class="title-panel">
             <button type="button" data-toggle="collapse" data-target="#output" aria-expanded="false">Output</button>
         </div>
-        <div id="output" 
+        <div id="output"
              class="collapse">
             <div id="output-section"
                  class="form-section">
@@ -551,7 +517,8 @@
                                    type="radio"
                                    name="fullListing"
                                    value="true"
-                                   ng-model="vm.formModels.fullListing">
+                                   checked
+                                   ng-model="vm.form.fullListing">
                         </div>
                     </div>
                     <div class="col-3">
@@ -561,13 +528,13 @@
                                    type="radio"
                                    name="fullListing"
                                    value="false"
-                                   ng-model="vm.formModels.fullListing">
+                                   ng-model="vm.form.fullListing">
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="label">
                             Transactions Per Page: &nbsp;
-                            <select ng-model="vm.formModels.transactionsPerPage" ng-change="vm.updatePagination()">
+                            <select ng-model="vm.form.transactionsPerPage" ng-change="vm.updatePagination()">
                                 <option value="25">25</option>
                                 <option value="50">50</option>
                                 <option value="100">100</option>
@@ -581,12 +548,11 @@
             </div>
         </div>
     </div>
-        
 
     <div id="submit-panel" class="text-center">
-        <button id="submit-button" class="btn btn-submit"
-                ng-click="vm.submit()">
-            Submit
-        </button>
+        <hp-submit-button data-url="http://localhost:55626/api/TransactionLookup/Post"
+                          data-model="vm.form"
+                          data-on-post="vm.onSubmit()"
+                          data-on-response="vm.onSubmitResponse(response)"></hp-submit-button>
     </div>
 </form>
