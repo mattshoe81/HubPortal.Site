@@ -2,14 +2,9 @@
     "use strict";
 
     var app = angular.module("shared.services")
-        .service("ProcessListResource", ["$resource", ProcessListResource]);
+        .service("ProcessListResource", ["$resource", "API", ProcessListResource]);
 
-    function ProcessListResource($resource) {
-        return $resource("http://localhost:55626/api/transactionLookup/getProcessNames");
-        //return $http({
-        //    url: "http://localhost:55626/api/transactionLookup/getProcessNames",
-        //    method: "GET",
-        //    params: { }
-        //});
+    function ProcessListResource($resource, API) {
+        return $resource(API, { controller: "Process", action: "Get" });
     }
 }());

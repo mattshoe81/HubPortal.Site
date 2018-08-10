@@ -2,9 +2,9 @@
     "use strict";
 
     var app = angular.module("shared.services")
-        .factory("ClientListResource", ["$resource", ClientListResource]);
+        .factory("ClientListResource", ["$resource", "API", ClientListResource]);
 
-    function ClientListResource($resource) {
-        return $resource("http://localhost:55626/api/transactionLookup/getClientNames");
+    function ClientListResource($resource, API) {
+        return $resource(API, { controller: "Client", action: "Get" });
     }
 }());

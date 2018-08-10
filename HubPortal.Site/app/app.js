@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    var app = angular.module("hubPortal", ["ui.router", "shared.services", "shared.directives", "ui", "filters"]);
+    var app = angular.module("hubPortal", ["reports", "maintenance"]);
 
     app.config(function ($provide) {
         $provide.decorator("$exceptionHandler",
@@ -22,7 +22,6 @@
         "$urlRouterProvider",
         function ($stateProvider, $urlRouterProvider) {
             var ROUTE_PREFIX = "/HubPortal/";
-
             $urlRouterProvider.otherwise(ROUTE_PREFIX + "transactionLookup");
             $stateProvider
                 .state("transactionLookup", {
@@ -38,6 +37,63 @@
                         }],
                         TransactionTypeList: ["TransactionTypeResource", function (TransactionTypeResource) {
                             return TransactionTypeResource.query();
+                        }]
+                    }
+                })
+                .state("transactionFieldLookup", {
+                    url: ROUTE_PREFIX + "transactionFieldLookup",
+                    templateUrl: "app/components/transactionFieldLookup/transactionFieldLookupView.html",
+                    controller: "TransactionFieldLookupCtrl as vm"
+                })
+                .state("processStatus", {
+                    url: ROUTE_PREFIX + "processStatus",
+                    templateUrl: "app/components/processStatus/processStatusView.html",
+                    controller: "ProcessStatusCtrl as vm"
+                })
+                .state("responseTimeTracking", {
+                    url: ROUTE_PREFIX + "responseTimeTracking",
+                    templateUrl: "app/components/responseTimeTracking/responseTimeTrackingView.html",
+                    controller: "ResponseTimeTrackingCtrl as vm"
+                })
+                .state("testTransaction", {
+                    url: ROUTE_PREFIX + "test/transaction",
+                    templateUrl: "app/components/testTransaction/testTransactionView.html",
+                    controller: "TestTransactionCtrl as vm"
+                })
+                .state("transactionDetail", {
+                    url: ROUTE_PREFIX + "transaction/:transactionid",
+                    templateUrl: "app/components/transactionLookup/transactionDetailView.html",
+                    controller: "TransactionDetailCtrl as vm",
+                    resolve: {
+                        ProcessDetails: ["ProcessDetailsResource", "$stateParams", function (ProcessDetailsResource, $stateParams) {
+                            var transactionid = $stateParams.transactionid;
+                            return ProcessResource.get({ transactionid: transactionid },
+                                function (response) {
+                                },
+                                function (response) {
+                                    if (response.status === 404) {
+                                        alert("Error accessing resource: " +
+                                            response.config.method + " " + response.config.url);
+                                    }
+                                    else {
+                                        alert(response.statusText);
+                                    }
+                                }).$promise;
+                        }],
+                        Checkpoints: ["CheckpointsResource", function (CheckpointsResource) {
+                            var transactionid = $stateParams.transactionid;
+                            return CheckpointsResource.get({ transactionid: transactionid },
+                                function (response) {
+                                },
+                                function (response) {
+                                    if (response.status === 404) {
+                                        alert("Error accessing resource: " +
+                                            response.config.method + " " + response.config.url);
+                                    }
+                                    else {
+                                        alert(response.statusText);
+                                    }
+                                }).$promise;
                         }]
                     }
                 })

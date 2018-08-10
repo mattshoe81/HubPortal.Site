@@ -1,7 +1,8 @@
 ﻿:root {
     --header-color: lightgray;
     --disabled-background-color: #DCDCDC;
-    --inactive-tab-color: #f6f6f6;
+    --inactive-tab-color: #edeaea;
+    --dropdown-hover-color: #edeaea;
 }
 
 ::-webkit-scrollbar {
@@ -21,6 +22,14 @@
 body {
     margin-bottom: 100px;
 }
+
+a {
+    cursor: pointer;
+}
+
+    a::after {
+        cursor: pointer;
+    }
 
 .shrink-wrap {
     padding: 0;
@@ -88,6 +97,14 @@ body {
             -moz-border-radius: 6px 0 6px 6px;
             border-radius: 6px 0 6px 6px;
         }
+
+.dropdown-item:hover {
+    background-color: var(--dropdown-hover-color);
+}
+
+.dropdown-item:active {
+    background-color: var(--dropdown-hover-color);
+}
 
 .title-panel {
     width: 100%;
@@ -289,7 +306,7 @@ th {
 }
 
 .table-content {
-    max-height: 300px;
+    max-height: 500px;
     overflow-x: auto;
     margin-top: 0px;
     border: 1px solid rgba(255,255,255,0.3);
@@ -323,7 +340,8 @@ th {
 }
 
 .start-time-column {
-    width: 14%;
+    width: 10%;
+    text-align: center;
 }
 
 .checkpoints-column {
@@ -410,15 +428,6 @@ ul.pagination {
     border: none;
 }
 
-.fa.fa-ellipsis-v {
-    margin-right: 25px;
-    font-size: 30px;
-    color: #343a40;
-    cursor: pointer;
-    margin-top: 5px;
-}
-
-.dropdown-menu {
-    padding: 25px;
-    white-space: nowrap;
+ul.navbar-nav li.dropdown:hover > div.dropdown-menu {
+    display: block;
 }

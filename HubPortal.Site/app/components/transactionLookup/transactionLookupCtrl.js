@@ -8,10 +8,11 @@
                 "ProcessList",
                 "ClientList",
                 "TransactionTypeList",
+                "TransactionLookupResource",
                 TransactionLookupCtrl
             ]);
 
-    function TransactionLookupCtrl(ProcessList, ClientList, TransactionTypeList) {
+    function TransactionLookupCtrl(ProcessList, ClientList, TransactionTypeList, TransactionLookupResource) {
         var vm = this;
         vm.processList = ProcessList;
         vm.clientList = ClientList;
@@ -21,34 +22,37 @@
         // Passed into the tabset directive
         vm.setLookupType = function (lookupType) { vm.form.lookupType = lookupType; };
         // The order in which the transactions appear in the paginated list. Used in the ng-repeat orderBy filter
-        vm.transactionSortCriteria = '+processName';
+        vm.transactionSortCriteria = "+transactionTime";
         // Current page of the pagination. Used in the ng-repeat startFrom filter to determine the starting index
         // of the results to display
         vm.currentPage = 0;
+        // The resource used to access the api, passed to the submit directive
+        vm.transactionLookupResource = TransactionLookupResource;
+        // The manner in which to display the results of the transaction search (list or count)
+        vm.resultDisplay = "list";
 
         // Angularjs doesn't play nice with date inputs, so have to do some work
         // to make the dates adhere to the correct format. Probably a cleaner way to do it somehow. Meh.
         var date = new Date();
-        var startDate = new Date(date.setMonth(date.getMonth() - 3));
-        date = new Date();
-        var startTime = new Date(date.setHours(date.getHours() - 2));
+        var startTime = new Date(date.setMonth(date.getMonth() - 3));
+        // Variable to indicate "include all" for any select element.
+        vm.INCLUDE_ALL = "All"
         vm.form = {
             accountNumber: "",
             amount: "",
             authorizationCode: "",
             carID: "",
-            checkpoint: "All",
+            checkpoint: vm.INCLUDE_ALL,
             claimNumber: "",
-            client: "All",
+            client: vm.INCLUDE_ALL,
             creditCardNumber: "",
             csr: "",
             ctu: "",
-            destination: "All",
-            // C# only likes the dates to be in this format?
+            destination: vm.INCLUDE_ALL,
+            // Datetime inputs only like the dates to be in this format. Dont care about seconds or milliseconds
             endTime: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate(), (new Date()).getHours(), (new Date()).getMinutes(), 0),
-            failed: "",
+            failed: vm.INCLUDE_ALL,
             fnolNumber: "",
-            fullListing: "true",
             genericSearchString: "",
             includeGenericStringInTransaction: "",
             invoiceNumber: "",
@@ -57,9 +61,9 @@
             minTime: "",
             orderID: "",
             partNumber: "",
-            pingOptions: "",
+            pingOptions: vm.INCLUDE_ALL,
             policyNumber: "",
-            process: "All",
+            process: vm.INCLUDE_ALL,
             promoCode: "",
             referralDate: undefined,
             referralNumber: "",
@@ -67,25 +71,39 @@
             serverName: "",
             sessionID: "",
             shopNumber: "",
-            source: "All",
-            // C# only likes the dates to be in this format?
-            startTime: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), startTime.getHours(), startTime.getMinutes(), 0),
+            source: vm.INCLUDE_ALL,
+            // Datetime inputs only like the dates to be in this format. Dont care about seconds or milliseconds
+            startTime: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate(), (new Date()).getHours() - 2, (new Date()).getMinutes(), 0),
             subCompany: "",
             transactions: [],
             transactionsPerPage: "25",
-            transactionType: "All",
+            transactionType: vm.INCLUDE_ALL,
             warehouseNumber: "",
             workOrderID: "",
             workOrderNumber: "",
             zipCode: ""
         }
-        vm.onSubmit = function () {
-            if (!vm.form.amount) vm.form.amount = 0;
+
+        /*
+         * Bad practice, but simplest solution to ensure local date when posting dates to api.
+         * Javascript submits dates in UTC format, but they need to be local time to ensure correct query results.
+         * Time zone doesnt matter since its just looking for the timestamp that is in the database.
+         * AngularJS wont allow you to submit a string while bound to a datetime input.
+         */
+        Date.prototype.toJSON = function () {
+            // Just remove the offset added for universal time, then convert to iso string.
+            var adjustedHour = this.getHours() - (this.getTimezoneOffset() / 60);
+            var localDate = new Date(this.getFullYear(), this.getMonth(), this.getDate(), adjustedHour, this.getMinutes(), 0);
+            return localDate.toISOString();
         }
+
+        // Called by the submit directive when it gets a response from the api
         vm.onSubmitResponse = function (response) {
-            if (!response.data.amount) response.data.amount = "";
-            if (response.data.length < 1) response.data.push("");
-            vm.form.transactions = response.data;
+            // Map all the start times to a date object, so they can be properly sorted
+            response.map(transaction => transaction.transactionTime = new Date(transaction.transactionTime));
+            // If no results, push empty string so the table will show
+            if (response.length < 1) response.push("");
+            vm.form.transactions = response;
         }
     }
 }());

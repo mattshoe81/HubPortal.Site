@@ -11,8 +11,7 @@
             controller: tabSetCtrl,
             controllerAs: "tabset",
             bindToController: true,
-            scope: {
-            }
+            scope: {}
         };
     }
 

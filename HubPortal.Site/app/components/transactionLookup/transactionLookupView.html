@@ -1,9 +1,9 @@
 ﻿<div ng-show="vm.form.transactions.length > 0">
 
-    <hp-pager current-page-model="vm.currentPage"
-              item-count="vm.form.transactions.length"
-              items-per-page="vm.form.transactionsPerPage"
-              ng-show="vm.form.transactions.length > vm.form.transactionsPerPage">
+    <hp-pager data-current-page-model="vm.currentPage"
+              data-item-count="vm.form.transactions.length"
+              data-items-per-page="vm.form.transactionsPerPage"
+              ng-show="vm.form.transactions.length > vm.form.transactionsPerPage && vm.resultDisplay === 'list'">
     </hp-pager>
     <div class="table-container table-header-container">
         <table>
@@ -18,7 +18,7 @@
                         Transaction Type
                     </th>
                     <th class="start-time-column"
-                        ng-click="vm.transactionSortCriteria === '-startTime' ? vm.transactionSortCriteria = '+startTime' : vm.transactionSortCriteria = '-startTime'">
+                        ng-click="vm.transactionSortCriteria === '-transactionTime' ? vm.transactionSortCriteria = '+transactionTime' : vm.transactionSortCriteria = '-transactionTime'">
                         Start Time
                     </th>
                     <th class="checkpoints-column"
@@ -43,7 +43,7 @@
     </div>
     <div class="table-content table-container">
         <table>
-            <tbody>
+            <tbody ng-show="vm.resultDisplay === 'list'">
                 <tr ng-repeat="transaction in vm.form.transactions
                                 | startFrom: vm.currentPage * vm.form.transactionsPerPage
                                 | limitTo: vm.form.transactionsPerPage
@@ -55,7 +55,7 @@
                         {{transaction.transactionTypeName}}
                     </td>
                     <td class="start-time-column">
-                        {{transaction.transactionTime}}
+                        {{transaction.transactionTime | date: 'MM/dd/yyyy hh:mm a'}}
                     </td>
                     <td class="checkpoints-column">
                         {{transaction.checkpointCount}}
@@ -76,6 +76,14 @@
             ng-show="vm.form.transactions.length === 1 && vm.form.transactions[0] === ''">
             No results to display
         </h5>
+        <h5 class="notification"
+            ng-show="vm.resultDisplay === 'count' && vm.form.transactions.length === 1">
+            {{vm.form.transactions.length | number}} Results
+        </h5>
+        <h5 class="notification"
+            ng-show="vm.resultDisplay === 'count' && vm.form.transactions.length !== 1">
+            {{vm.form.transactions.length | number}} Results
+        </h5>
     </div>
 </div>
 
@@ -87,9 +95,9 @@
 
         <div class="form-section tabbed">
             <hp-tab-set>
-                <hp-tab heading="Process"
-                        tab-click="vm.setSearchType(value)"
-                        click-param="process">
+                <hp-tab data-heading="Process"
+                        data-tab-click="vm.setSearchType(value)"
+                        data-click-param="process">
 
                     <div id="process">
                         <div>
@@ -99,16 +107,16 @@
 
                             <select name="process"
                                     ng-model="vm.form.process">
-                                <option value="All" selected>--All--</option>
-                                <option value="{{process}}" ng-repeat="process in vm.processList | unique: 'process'">{{process}}</option>
+                                <option value="{{vm.INCLUDE_ALL}}" selected>--All--</option>
+                                <option value="{{process}}" ng-repeat="process in vm.processList | unique: 'process' | orderBy">{{process}}</option>
                             </select>
                         </div>
                     </div>
                 </hp-tab>
 
-                <hp-tab heading="Client"
-                        tab-click="vm.setSearchType(value)"
-                        click-param="client">
+                <hp-tab data-heading="Client"
+                        data-tab-click="vm.setSearchType(value)"
+                        data-click-param="client">
 
                     <div id="client">
                         <div>
@@ -116,16 +124,16 @@
                                 <span>Client</span>
                             </div>
                             <select ng-model="vm.form.client">
-                                <option value="All" selected>--All--</option>
-                                <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client'">{{client}}</option>
+                                <option value="{{vm.INCLUDE_ALL}}" selected>--All--</option>
+                                <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client' | orderBy">{{client}}</option>
                             </select>
                         </div>
                     </div>
                 </hp-tab>
 
-                <hp-tab heading="Source"
-                        tab-click="vm.setSearchType(value)"
-                        click-param="source">
+                <hp-tab data-heading="Source"
+                        data-tab-click="vm.setSearchType(value)"
+                        data-click-param="source">
 
                     <div id="source">
                         <div>
@@ -135,8 +143,8 @@
                                         <span>Source</span>
                                     </div>
                                     <select ng-model="vm.form.source">
-                                        <option value="All" ng-selected="selected">--All--</option>
-                                        <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client'">{{client}}</option>
+                                        <option value="{{vm.INCLUDE_ALL}}" ng-selected="selected">--All--</option>
+                                        <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client' | orderBy">{{client}}</option>
                                     </select>
                                 </div>
                                 <div class="col-4">
@@ -145,8 +153,8 @@
                                     </div>
                                     <div>
                                         <select ng-model="vm.form.destination">
-                                            <option value="All" selected>--All--</option>
-                                            <option value="{{client}}" ng-repeat="client in vm.clientList | unique: client">{{client}}</option>
+                                            <option value="{{vm.INCLUDE_ALL}}" selected>--All--</option>
+                                            <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client' | orderBy">{{client}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -156,8 +164,8 @@
                                     </div>
                                     <div>
                                         <select ng-model="vm.form.transactionType">
-                                            <option value="All" selected>--All--</option>
-                                            <option value="{{transactionType}}" ng-repeat="transactionType in vm.transactionTypeList | unique: transactionType">{{transactionType}}</option>
+                                            <option value="{{vm.INCLUDE_ALL}}" selected>--All--</option>
+                                            <option value="{{transactionType}}" ng-repeat="transactionType in vm.transactionTypeList | unique: 'transactionType' | orderBy">{{transactionType}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -230,7 +238,7 @@
                                         Ping Options
                                     </div>
                                     <select ng-model="vm.form.pingOptions">
-                                        <option selected value="All">All Transactions</option>
+                                        <option selected value="{{vm.INCLUDE_ALL}}">All Transactions</option>
                                         <option value="Y">Only Pings</option>
                                         <option value="N">Exclude Pings</option>
                                     </select>
@@ -243,7 +251,7 @@
                                         Success Status
                                     </div>
                                     <select ng-model="vm.form.failed">
-                                        <option selected value="All">--All--</option>
+                                        <option selected value="{{vm.INCLUDE_ALL}}">--All--</option>
                                         <option value="Y">Successful</option>
                                         <option value="N">Unsuccessful</option>
                                         <option value="null">Unknown</option>
@@ -282,9 +290,9 @@
     <div id="lookup-section"
          class="form-section tabbed collapse">
         <hp-tab-set>
-            <hp-tab heading="Coverage"
-                    tab-click="vm.setLookupType(value)"
-                    click-param="coverage">
+            <hp-tab data-heading="Coverage"
+                    data-tab-click="vm.setLookupType(value)"
+                    data-click-param="coverage">
                 <div class="row">
                     <div class="col-3">
                         <div class="label">
@@ -368,9 +376,9 @@
                 </div>
             </hp-tab>
 
-            <hp-tab heading="Credit Card"
-                    tab-click="vm.setLookupType(value)"
-                    click-param="creditCard">
+            <hp-tab data-heading="Credit Card"
+                    data-tab-click="vm.setLookupType(value)"
+                    data-click-param="creditCard">
                 <div class="row">
                     <div class="col-3">
                         <div class="label">
@@ -414,9 +422,9 @@
                 </div>
             </hp-tab>
 
-            <hp-tab heading="Wholesale"
-                    tab-click="vm.setLookupType(value)"
-                    click-param="wholesale">
+            <hp-tab data-heading="Wholesale"
+                    data-tab-click="vm.setLookupType(value)"
+                    data-click-param="wholesale">
                 <div class="row">
                     <div class="col-3">
                         <div class="label">
@@ -441,9 +449,9 @@
                 </div>
             </hp-tab>
 
-            <hp-tab heading="Shop"
-                    tab-click="vm.setLookupType(value)"
-                    click-param="shop">
+            <hp-tab data-heading="Shop"
+                    data-tab-click="vm.setLookupType(value)"
+                    data-click-param="shop">
                 <div class="row">
                     <div class="col-3">
                         <div class="label">
@@ -461,9 +469,9 @@
                 </div>
             </hp-tab>
 
-            <hp-tab heading="Generic"
-                    tab-click="vm.setLookupType(value)"
-                    click-param="generic">
+            <hp-tab data-heading="Generic"
+                    data-tab-click="vm.setLookupType(value)"
+                    data-click-param="generic">
                 <div class="row">
                     <div class="col-3">
                         <div class="label">
@@ -477,7 +485,7 @@
                             Checkpoint
                         </div>
                         <select ng-model="vm.form.checkpoint">
-                            <option value="All">--All--</option>
+                            <option value="{{vm.INCLUDE_ALL}}">--All--</option>
                             <option value="INBOUND_REQUEST">Inbound Request</option>
                             <option value="OUTBOUND_REQUEST">Outbound Request</option>
                             <option value="INBOUND_RESPONSE">Inbound Response</option>
@@ -515,10 +523,8 @@
                             Full Listing:
                             <input style="margin-left: 15px;"
                                    type="radio"
-                                   name="fullListing"
-                                   value="true"
-                                   checked
-                                   ng-model="vm.form.fullListing">
+                                   value="list"
+                                   ng-model="vm.resultDisplay">
                         </div>
                     </div>
                     <div class="col-3">
@@ -526,9 +532,8 @@
                             Count Only:
                             <input style="margin-left: 15px;"
                                    type="radio"
-                                   name="fullListing"
-                                   value="false"
-                                   ng-model="vm.form.fullListing">
+                                   value="count"
+                                   ng-model="vm.resultDisplay">
                         </div>
                     </div>
                     <div class="col-3">
@@ -550,9 +555,9 @@
     </div>
 
     <div id="submit-panel" class="text-center">
-        <hp-submit-button data-url="http://localhost:55626/api/TransactionLookup/Post"
-                          data-model="vm.form"
-                          data-on-post="vm.onSubmit()"
+        <hp-submit-button data-model="vm.form"
+                          data-resource="vm.transactionLookupResource"
+                          data-on-submit="vm.onSubmit()"
                           data-on-response="vm.onSubmitResponse(response)"></hp-submit-button>
     </div>
 </form>

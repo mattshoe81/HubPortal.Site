@@ -2,6 +2,11 @@
     angular.module("shared.directives")
         .directive("hpSubmitButton", hpSubmitButton);
 
+    /*
+     * This directive REQUIRES a resource to be bound to it in order to
+     * submit, and that resource MUST have a custom function called 'submit'
+     * that takes a single parameter called 'data'
+     */
     function hpSubmitButton() {
         return {
             restrict: "E",
@@ -9,12 +14,11 @@
             controller: submitButtonCtrl,
             controllerAs: "submitButton",
             bindToController: {
-                url: "@",
-                model: "=",
-                onPost: "&",
+                model: "<",
+                resource: "<",
+                onSubmit: "&",
                 onResponse: "&"
-            },
-            scope: {}
+            }
         }
     }
 
@@ -25,15 +29,8 @@
             var button = document.getElementById("submit-button");
             button.disabled = true;
             button.textContent = "Loading...";
-            if (submitButton.onPost) submitButton.onPost();
-            $http({
-                method: 'POST',
-                url: submitButton.url,
-                data: submitButton.model,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(
+            if (submitButton.onSubmit) submitButton.onSubmit();
+            submitButton.resource.submit(submitButton.model).$promise.then(
                 function (response) {
                     submitButton.onResponse({ response: response });
                     button.disabled = false;
