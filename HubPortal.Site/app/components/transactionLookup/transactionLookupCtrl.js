@@ -8,15 +8,16 @@
                 "ProcessList",
                 "ClientList",
                 "TransactionTypeList",
-                "TransactionLookupResource",
+                "TransactionResource",
                 TransactionLookupCtrl
             ]);
 
-    function TransactionLookupCtrl(ProcessList, ClientList, TransactionTypeList, TransactionLookupResource) {
+    function TransactionLookupCtrl(ProcessList, ClientList, TransactionTypeList, TransactionResource) {
         var vm = this;
         vm.processList = ProcessList;
         vm.clientList = ClientList;
         vm.transactionTypeList = TransactionTypeList;
+        vm.loading = false;
         // Passed into the tabset directive
         vm.setSearchType = function (searchType) { vm.form.searchType = searchType; };
         // Passed into the tabset directive
@@ -27,7 +28,7 @@
         // of the results to display
         vm.currentPage = 0;
         // The resource used to access the api, passed to the submit directive
-        vm.transactionLookupResource = TransactionLookupResource;
+        vm.transactionResource = TransactionResource;
         // The manner in which to display the results of the transaction search (list or count)
         vm.resultDisplay = "list";
 
@@ -76,7 +77,7 @@
             startTime: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate(), (new Date()).getHours() - 2, (new Date()).getMinutes(), 0),
             subCompany: "",
             transactions: [],
-            transactionsPerPage: "25",
+            transactionsPerPage: "250",
             transactionType: vm.INCLUDE_ALL,
             warehouseNumber: "",
             workOrderID: "",
@@ -85,7 +86,7 @@
         }
 
         /*
-         * Bad practice, but simplest solution to ensure local date when posting dates to api.
+         * Potentially a bad idea, but simplest solution to ensure local date when posting dates to api.
          * Javascript submits dates in UTC format, but they need to be local time to ensure correct query results.
          * Time zone doesnt matter since its just looking for the timestamp that is in the database.
          * AngularJS wont allow you to submit a string while bound to a datetime input.
@@ -97,13 +98,19 @@
             return localDate.toISOString();
         }
 
-        // Called by the submit directive when it gets a response from the api
-        vm.onSubmitResponse = function (response) {
-            // Map all the start times to a date object, so they can be properly sorted
-            response.map(transaction => transaction.transactionTime = new Date(transaction.transactionTime));
-            // If no results, push empty string so the table will show
-            if (response.length < 1) response.push("");
-            vm.form.transactions = response;
-        }
+        vm.submit = function () {
+            vm.loading = true;
+            TransactionResource.post({ action: "PostData" }, vm.form).$promise.then(
+                function (response) {
+                    // Map all the start times to a date object, so they can be properly displayed and sorted
+                    response.map(transaction => transaction.transactionTime = new Date(transaction.transactionTime));
+                    // If no results, push empty string so the table will show
+                    if (response.length < 1) response.push("");
+                    vm.form.transactions = response;
+                    vm.loading = false;
+                }, function (error) {
+                    console.log("Unable to post form data", error);
+                });
+        };
     }
 }());

@@ -1,10 +1,205 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿<div id="transaction-detail">
 
-</body>
-</html>
+    <div class="title-panel">
+        Process Information
+    </div>
+    <div class="panel-body">
+        <table>
+            <tr>
+                <td class="label">Process Name:</td>
+                <td class="data">{{vm.transaction.processName}}</td>
+                <td class="label">Session ID:</td>
+                <td class="data">{{vm.transaction.sessionID}}</td>
+            </tr>
+            <tr>
+                <td class="label">Source:</td>
+                <td class="data">{{vm.transaction.source}}</td>
+                <td class="label">Destination:</td>
+                <td class="data">{{vm.transaction.destination}}</td>
+            </tr>
+            <tr>
+                <td class="label">Service Layer:</td>
+                <td class="data">{{vm.transaction.serviceLayer}}</td>
+                <td class="label">Transaction Type:</td>
+                <td class="data">{{vm.transaction.transactionType}}</td>
+            </tr>
+            <tr>
+                <td class="label">Successful:</td>
+                <td class="data">{{vm.transaction.successful}}</td>
+                <td class="label">Ping:</td>
+                <td class="data">{{vm.transaction.ping}}</td>
+            </tr>
+            <tr>
+                <td class="label">Source Type:</td>
+                <td class="data">{{vm.transaction.sourceType}}</td>
+                <td class="label">Destination Type:</td>
+                <td class="data">{{vm.transaction.destinationType}}</td>
+            </tr>
+            <tr>
+                <td class="label">Transaction ID:</td>
+                <td class="data" colspan="3">{{vm.transaction.transactionId}}</td>
+            </tr>
+            <tr>
+                <td class="label">URL:</td>
+                <td class="data" colspan="3">{{vm.transaction.url}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div ng-show="vm.transaction.hasCoverageInfo">
+        <div class="spacer"></div>
+        <div class="title-panel">
+            Coverage Information
+        </div>
+        <div class="panel-body">
+            <table>
+                <tr>
+                    <td class="label">Policy Number:</td>
+                    <td class="data">{{vm.transaction.policyNumber}}</td>
+                    <td class="label">Claim Number:</td>
+                    <td class="data">{{vm.transaction.claimNumber}}</td>
+                </tr>
+                <tr>
+                    <td class="label">Referral Number:</td>
+                    <td class="data">{{vm.transaction.referralNumber}}</td>
+                    <td class="label">FNOL Number:</td>
+                    <td class="data">{{vm.transaction.fnolNumber}}</td>
+                </tr>
+                <tr>
+                    <td class="label">CSR:</td>
+                    <td class="data">{{vm.transaction.csr}}</td>
+                    <td class="label">Sub-Company:</td>
+                    <td class="data">{{vm.transaction.subCompany}}</td>
+                </tr>
+                <tr>
+                    <td class="label">Referral Date:</td>
+                    <td class="data">{{vm.transaction.referralDate}}</td>
+                    <td class="label">Part Number:</td>
+                    <td class="data">{{vm.transaction.partNumber}}</td>
+                </tr>
+                <tr>
+                    <td class="label">Zip Code:</td>
+                    <td class="data">{{vm.transaction.zipCode}}</td>
+                    <td class="label">Car Id:</td>
+                    <td class="data">{{vm.transaction.carId}}</td>
+                </tr>
+                <tr>
+                    <td class="label">Promo Code:</td>
+                    <td class="data" colspan="3">{{vm.transaction.promoCode}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div ng-show="vm.transaction.hasCreditCardInfo">
+        <div class="spacer"></div>
+        <div class="title-panel">
+            Credit Card Information
+        </div>
+        <div class="panel-body">
+            <table>
+                <tr>
+                    <td class="label">Last 4 Digits on Card:</td>
+                    <td class="data">{{vm.transaction.creditCardNumber}}</td>
+                    <td class="label">Amount:</td>
+                    <td class="data">{{vm.transaction.amount}}</td>
+                </tr>
+                <tr>
+                    <td class="label">CTU:</td>
+                    <td class="data">{{vm.transaction.ctu}}</td>
+                    <td class="label">Work Order Number:</td>
+                    <td class="data">{{vm.transaction.workOrderNumber}}</td>
+                </tr>
+                <tr>
+                    <td class="label">Authorization Code:</td>
+                    <td class="data">{{vm.transaction.authorizationCode}}</td>
+                    <td class="label">Work Order Id:</td>
+                    <td class="data">{{vm.transaction.workOrderId}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div ng-show="vm.transaction.hasWholesaleInfo">
+        <div class="spacer"></div>
+        <div class="title-panel">
+            Wholesale Information
+        </div>
+        <div class="panel-body">
+            <table>
+                <tr>
+                    <td class="label">Account Number:</td>
+                    <td class="data">{{vm.transaction.accountNumber}}</td>
+                    <td class="label">Order ID:</td>
+                    <td class="data">{{vm.transaction.orderId}}</td>
+                </tr>
+                <tr>
+                    <td class="label">Wharehouse Number:</td>
+                    <td class="data" colspan="3">{{vm.transaction.warehouseNumber}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div ng-show="vm.transaction.hasShopInfo">
+        <div class="spacer"></div>
+        <div class="title-panel">
+            Shop Information
+        </div>
+        <div class="panel-body">
+            <table>
+                <tr>
+                    <td class="label">Invoice Number:</td>
+                    <td class="data">{{vm.transaction.invoiceNumber}}</td>
+                    <td class="label">Shop Number:</td>
+                    <td class="data">{{vm.transaction.shopNumber}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="title-panel">
+        Checkpoints
+    </div>
+    <div class="panel-body" ng-repeat="checkpoint in vm.checkpoints">
+        <table>
+            <tr>
+                <td class="label">Location:</td>
+                <td class="data">{{checkpoint.location}}</td>
+            </tr>
+            <tr>
+                <td class="label">Server:</td>
+                <td class="data">{{checkpoint.serverName}}</td>
+            </tr>
+            <tr>
+                <td class="label">Time:</td>
+                <td class="data">
+                    <input type="datetime-local" readonly ng-model="checkpoint.time" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Type:</td>
+                <td class="data">{{checkpoint.type}}</td>
+            </tr>
+            <tr>
+                <td class="label">Elapsed Time:</td>
+                <td class="data">{{checkpoint.elapsedTime}} sec</td>
+            </tr>
+            <tr>
+                <td class="label">Transaction Size:</td>
+                <td class="data">{{checkpoint.size}} bytes</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <a ui-sref="checkpointMessage({checkpointid: checkpoint.checkpointId })">Message</a> &nbsp; &nbsp;
+                    <a ng-show="checkpoint.type.match('.*WS.*') || checkpoint.type.match('.*Web Service.*') || checkpoint.type.match('.*WebService.*')"
+                       ui-sref="checkpointEmbeddedMessage({checkpointid: checkpoint.checkpointId })">
+                        Embedded Message
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

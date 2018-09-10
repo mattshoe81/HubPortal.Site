@@ -12,7 +12,7 @@
 
                         $delegate(exception, cause);
 
-                        alert(exception.message);
+                        console.log(exception.message);
                     };
                 }
             ]);

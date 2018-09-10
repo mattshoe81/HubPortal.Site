@@ -42,14 +42,17 @@
         </table>
     </div>
     <div class="table-content table-container">
-        <table>
+        <table id="transaction-results">
             <tbody ng-show="vm.resultDisplay === 'list'">
                 <tr ng-repeat="transaction in vm.form.transactions
+                                | orderBy: vm.transactionSortCriteria
                                 | startFrom: vm.currentPage * vm.form.transactionsPerPage
-                                | limitTo: vm.form.transactionsPerPage
-                                | orderBy: vm.transactionSortCriteria">
+                                | limitTo: vm.form.transactionsPerPage">
                     <td class="process-column">
-                        {{transaction.processName}}
+                        <a ui-sref="transactionDetail({transactionid: '{{transaction.transactionID}}' })"
+                           target="_blank">
+                            {{transaction.processName}}
+                        </a>
                     </td>
                     <td class="type-column">
                         {{transaction.transactionTypeName}}
@@ -93,7 +96,7 @@
             Search Parameters
         </div>
 
-        <div class="form-section tabbed">
+        <div class="panel-body tabbed">
             <hp-tab-set>
                 <hp-tab data-heading="Process"
                         data-tab-click="vm.setSearchType(value)"
@@ -184,7 +187,7 @@
         <div id="details"
              class="collapse show">
             <div id="refine-section"
-                 class="form-section">
+                 class="panel-body">
                 <div class="row">
                     <div class="col-6 right-border padded-section">
                         <div class="">
@@ -288,7 +291,7 @@
     </div>
 
     <div id="lookup-section"
-         class="form-section tabbed collapse">
+         class="panel-body tabbed collapse">
         <hp-tab-set>
             <hp-tab data-heading="Coverage"
                     data-tab-click="vm.setLookupType(value)"
@@ -516,7 +519,7 @@
         <div id="output"
              class="collapse">
             <div id="output-section"
-                 class="form-section">
+                 class="panel-body">
                 <div class="row">
                     <div class="col-3">
                         <div class="label">
@@ -555,9 +558,10 @@
     </div>
 
     <div id="submit-panel" class="text-center">
-        <hp-submit-button data-model="vm.form"
-                          data-resource="vm.transactionLookupResource"
-                          data-on-submit="vm.onSubmit()"
-                          data-on-response="vm.onSubmitResponse(response)"></hp-submit-button>
+        <button id="submit-button" ng-disabled="vm.loading" class="btn btn-submit"
+                ng-click="vm.submit()">
+            <span ng-hide="vm.loading">Submit</span>
+            <span ng-show="vm.loading">Searching...</span>
+        </button>
     </div>
 </form>

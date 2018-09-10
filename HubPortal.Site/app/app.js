@@ -12,7 +12,7 @@
 
                         $delegate(exception, cause);
 
-                        alert(exception.message);
+                        console.log(exception.message);
                     };
                 }
             ]);
@@ -29,14 +29,29 @@
                     templateUrl: "app/components/transactionLookup/transactionLookupView.html",
                     controller: "TransactionLookupCtrl as vm",
                     resolve: {
-                        ProcessList: ["ProcessListResource", function (ProcessListResource) {
-                            return ProcessListResource.query();
+                        ProcessList: ["ProcessResource", function (ProcessResource) {
+                            return ProcessResource.query({ action: "Get" });
                         }],
-                        ClientList: ["ClientListResource", function (ClientListResource) {
-                            return ClientListResource.query();
+                        ClientList: ["ClientResource", function (ClientResource) {
+                            return ClientResource.query({ action: "Get" });
                         }],
-                        TransactionTypeList: ["TransactionTypeResource", function (TransactionTypeResource) {
-                            return TransactionTypeResource.query();
+                        TransactionTypeList: ["TransactionResource", function (TransactionResource) {
+                            return TransactionResource.query({ action: "GetTypes" });
+                        }]
+                    }
+                })
+                .state("transactionDetail", {
+                    url: ROUTE_PREFIX + "transaction/:transactionid",
+                    templateUrl: "app/components/transactionLookup/transactionDetailView.html",
+                    controller: "TransactionDetailCtrl as vm",
+                    resolve: {
+                        TransactionDetail: ["TransactionResource", "$stateParams", function (TransactionResource, $stateParams) {
+                            var transactionid = $stateParams.transactionid;
+                            return TransactionResource.get({ action: "GetById", transactionid: transactionid });
+                        }],
+                        Checkpoints: ["CheckpointResource", "$stateParams", function (CheckpointResource, $stateParams) {
+                            var transactionid = $stateParams.transactionid;
+                            return CheckpointResource.query({ action: "Get", transactionid: transactionid });
                         }]
                     }
                 })
@@ -60,40 +75,23 @@
                     templateUrl: "app/components/testTransaction/testTransactionView.html",
                     controller: "TestTransactionCtrl as vm"
                 })
-                .state("transactionDetail", {
-                    url: ROUTE_PREFIX + "transaction/:transactionid",
-                    templateUrl: "app/components/transactionLookup/transactionDetailView.html",
-                    controller: "TransactionDetailCtrl as vm",
+                .state("checkpointMessage", {
+                    url: ROUTE_PREFIX + "checkpoint/message/:checkpointid",
+                    templateUrl: "app/components/transactionLookup/checkpointMessageView.html",
+                    controller: "CheckpointMessageCtrl as vm",
                     resolve: {
-                        ProcessDetails: ["ProcessDetailsResource", "$stateParams", function (ProcessDetailsResource, $stateParams) {
-                            var transactionid = $stateParams.transactionid;
-                            return ProcessResource.get({ transactionid: transactionid },
-                                function (response) {
-                                },
-                                function (response) {
-                                    if (response.status === 404) {
-                                        alert("Error accessing resource: " +
-                                            response.config.method + " " + response.config.url);
-                                    }
-                                    else {
-                                        alert(response.statusText);
-                                    }
-                                }).$promise;
-                        }],
-                        Checkpoints: ["CheckpointsResource", function (CheckpointsResource) {
-                            var transactionid = $stateParams.transactionid;
-                            return CheckpointsResource.get({ transactionid: transactionid },
-                                function (response) {
-                                },
-                                function (response) {
-                                    if (response.status === 404) {
-                                        alert("Error accessing resource: " +
-                                            response.config.method + " " + response.config.url);
-                                    }
-                                    else {
-                                        alert(response.statusText);
-                                    }
-                                }).$promise;
+                        CheckpointMessage: ["CheckpointResource", "$stateParams", function (CheckpointResource, $stateParams) {
+                            return CheckpointResource.query({ action: "GetMessage", checkpointid: $stateParams.checkpointid });
+                        }]
+                    }
+                })
+                .state("checkpointEmbeddedMessage", {
+                    url: ROUTE_PREFIX + "checkpoint/message/embedded/:checkpointid",
+                    templateUrl: "app/components/transactionLookup/checkpointEmbeddedMessageView.html",
+                    controller: "CheckpointEmbeddedMessageCtrl as vm",
+                    resolve: {
+                        CheckpointMessage: ["CheckpointResource", "$stateParams", function (CheckpointResource, $stateParams) {
+                            return CheckpointResource.get({ action: "GetEmbeddedMessage", checkpointid: $stateParams.checkpointid });
                         }]
                     }
                 })

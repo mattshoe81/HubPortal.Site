@@ -25,9 +25,6 @@
 
         ctrl.activateTab = function (selectedTab) {
             angular.forEach(ctrl.tabs, function (tab) {
-                console.log("Tab Param:     ", tab.clickParam);
-                console.log("Tab Function:  ", tab.click);
-                console.log("");
                 if (tab.active && tab !== selectedTab) {
                     tab.active = false;
                 }

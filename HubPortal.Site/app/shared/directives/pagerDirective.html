@@ -1,4 +1,5 @@
 ﻿<nav aria-label="Page navigation example">
+
     <ul class="pagination justify-content-center">
         <li class="page-item">
             <button class="btn btn-page"
@@ -27,13 +28,11 @@
             <a class="page-link"
                ng-click="pager.adjustCurrentPage(pager.data.indexOf(item))"
                href="#">
-                {{
-pager.data.indexOf(item) + 1
-                }}
+                {{pager.data.indexOf(item) + 1}}
             </a>
         </li>
         <li class="page-item"
-            ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10) - 10)">
+            ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10))">
             <a class="page-link"
                ng-click="pager.adjustCurrentPage((pager.pagerStart + 1) * 10)"
                href="#">
@@ -41,7 +40,7 @@ pager.data.indexOf(item) + 1
             </a>
         </li>
         <li class="page-item"
-            ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10) - 10)">
+            ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10))">
             <a class="page-link"
                ng-click="pager.adjustCurrentPage(pager.numberOfPages - 1)"
                href="#">{{pager.numberOfPages}}</a>
