@@ -142,6 +142,10 @@ a {
     padding: 0;
 }
 
+.underline {
+    text-decoration: underline;
+}
+
 .notification {
     padding: 10px;
     width: 100%;

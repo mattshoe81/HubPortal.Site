@@ -94,6 +94,6 @@
                             return CheckpointResource.get({ action: "GetEmbeddedMessage", checkpointid: $stateParams.checkpointid });
                         }]
                     }
-                })
+                });
         }]);
 }());

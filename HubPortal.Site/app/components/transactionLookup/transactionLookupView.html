@@ -64,7 +64,7 @@
                         {{transaction.checkpointCount}}
                     </td>
                     <td class="elapsed-column">
-                        {{transaction.totalElapsedTime}}
+                        <span ng-show="transaction">{{transaction.totalElapsedTime / 1000.000}}</span>
                     </td>
                     <td class="success-column">
                         {{transaction.successful}}
@@ -79,14 +79,16 @@
             ng-show="vm.form.transactions.length === 1 && vm.form.transactions[0] === ''">
             No results to display
         </h5>
-        <h5 class="notification"
-            ng-show="vm.resultDisplay === 'count' && vm.form.transactions.length === 1">
-            {{vm.form.transactions.length | number}} Results
-        </h5>
-        <h5 class="notification"
-            ng-show="vm.resultDisplay === 'count' && vm.form.transactions.length !== 1">
-            {{vm.form.transactions.length | number}} Results
-        </h5>
+        <div ng-hide="vm.form.transactions[0] === ''">
+            <h5 class="notification"
+                ng-show="vm.resultDisplay === 'count' && vm.form.transactions.length === 1">
+                {{vm.form.transactions.length | number}} Results
+            </h5>
+            <h5 class="notification"
+                ng-show="vm.resultDisplay === 'count' && vm.form.transactions.length !== 1">
+                {{vm.form.transactions.length | number}} Results
+            </h5>
+        </div>
     </div>
 </div>
 
@@ -110,7 +112,7 @@
 
                             <select name="process"
                                     ng-model="vm.form.process">
-                                <option value="{{vm.INCLUDE_ALL}}" selected>--All--</option>
+                                <option value="{{vm.ALL}}" selected>--All--</option>
                                 <option value="{{process}}" ng-repeat="process in vm.processList | unique: 'process' | orderBy">{{process}}</option>
                             </select>
                         </div>
@@ -127,7 +129,7 @@
                                 <span>Client</span>
                             </div>
                             <select ng-model="vm.form.client">
-                                <option value="{{vm.INCLUDE_ALL}}" selected>--All--</option>
+                                <option value="{{vm.ALL}}" selected>--All--</option>
                                 <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client' | orderBy">{{client}}</option>
                             </select>
                         </div>
@@ -146,7 +148,7 @@
                                         <span>Source</span>
                                     </div>
                                     <select ng-model="vm.form.source">
-                                        <option value="{{vm.INCLUDE_ALL}}" ng-selected="selected">--All--</option>
+                                        <option value="{{vm.ALL}}" ng-selected="selected">--All--</option>
                                         <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client' | orderBy">{{client}}</option>
                                     </select>
                                 </div>
@@ -156,7 +158,7 @@
                                     </div>
                                     <div>
                                         <select ng-model="vm.form.destination">
-                                            <option value="{{vm.INCLUDE_ALL}}" selected>--All--</option>
+                                            <option value="{{vm.ALL}}" selected>--All--</option>
                                             <option value="{{client}}" ng-repeat="client in vm.clientList | unique: 'client' | orderBy">{{client}}</option>
                                         </select>
                                     </div>
@@ -167,7 +169,7 @@
                                     </div>
                                     <div>
                                         <select ng-model="vm.form.transactionType">
-                                            <option value="{{vm.INCLUDE_ALL}}" selected>--All--</option>
+                                            <option value="{{vm.ALL}}" selected>--All--</option>
                                             <option value="{{transactionType}}" ng-repeat="transactionType in vm.transactionTypeList | unique: 'transactionType' | orderBy">{{transactionType}}</option>
                                         </select>
                                     </div>
@@ -183,6 +185,9 @@
     <div>
         <div id="refine-title" class="title-panel">
             <button type="button" data-toggle="collapse" data-target="#details" aria-expanded="true">Transaction Details</button>
+        </div>
+        <div class="panel-body">
+            {{vm.testQuery}}
         </div>
         <div id="details"
              class="collapse show">
@@ -216,14 +221,14 @@
                                     <div class="label">
                                         Min Elapsed Time (s)
                                     </div>
-                                    <input type="number" ng-model="vm.form.minTime" />
+                                    <input type="number" min="0" ng-model="vm.form.minTime" />
                                 </div>
 
                                 <div class="col-6">
                                     <div class="label">
                                         Max Elapsed Time (s)
                                     </div>
-                                    <input type="number" ng-model="vm.form.maxTime" />
+                                    <input type="number" min="0" ng-model="vm.form.maxTime" />
                                 </div>
                             </div>
                         </div>
@@ -241,7 +246,7 @@
                                         Ping Options
                                     </div>
                                     <select ng-model="vm.form.pingOptions">
-                                        <option selected value="{{vm.INCLUDE_ALL}}">All Transactions</option>
+                                        <option selected value="{{vm.ALL}}">All Transactions</option>
                                         <option value="Y">Only Pings</option>
                                         <option value="N">Exclude Pings</option>
                                     </select>
@@ -254,7 +259,7 @@
                                         Success Status
                                     </div>
                                     <select ng-model="vm.form.failed">
-                                        <option selected value="{{vm.INCLUDE_ALL}}">--All--</option>
+                                        <option selected value="{{vm.ALL}}">--All--</option>
                                         <option value="Y">Successful</option>
                                         <option value="N">Unsuccessful</option>
                                         <option value="null">Unknown</option>
@@ -387,13 +392,13 @@
                         <div class="label">
                             Card Number(last 4)
                         </div>
-                        <input type="number" ng-model="vm.form.creditCardNumber" />
+                        <input type="number" min="0" ng-model="vm.form.creditCardNumber" />
                     </div>
                     <div class="col-3">
                         <div class="label">
                             Amount
                         </div>
-                        <input type="number" ng-model="vm.form.amount" />
+                        <input type="number" min="0" ng-model="vm.form.amount" />
                     </div>
                     <div class="col-3">
                         <div class="label">
@@ -488,7 +493,7 @@
                             Checkpoint
                         </div>
                         <select ng-model="vm.form.checkpoint">
-                            <option value="{{vm.INCLUDE_ALL}}">--All--</option>
+                            <option value="{{vm.ALL}}">--All--</option>
                             <option value="INBOUND_REQUEST">Inbound Request</option>
                             <option value="OUTBOUND_REQUEST">Outbound Request</option>
                             <option value="INBOUND_RESPONSE">Inbound Response</option>
@@ -504,6 +509,7 @@
                             <input style="margin-left: 15px;"
                                    type="checkbox"
                                    ng-model="vm.form.includeGenericStringInTransaction"
+                                   ng-click="vm.form.includeGenericStringInTransaction = !vm.form.includeGenericStringInTransaction;"
                                    checked>
                         </div>
                     </div>

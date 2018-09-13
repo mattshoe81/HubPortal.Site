@@ -3,21 +3,6 @@
 
     var app = angular.module("reports", ["ui.router", "shared.services", "shared.directives", "ui", "filters"]);
 
-    app.config(function ($provide) {
-        $provide.decorator("$exceptionHandler",
-            ["$delegate",
-                function ($delegate) {
-                    return function (exception, cause) {
-                        exception.message = "Something went wrong \n Message:\n" + exception.message;
-
-                        $delegate(exception, cause);
-
-                        console.log(exception.message);
-                    };
-                }
-            ]);
-    });
-
     app.config(["$stateProvider",
         "$urlRouterProvider",
         function ($stateProvider, $urlRouterProvider) {

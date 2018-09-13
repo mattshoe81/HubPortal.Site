@@ -11,15 +11,11 @@
                 action: "@action"
             },
             {
-                submit: {
-                    controller: "Transaction",
-                    action: "PostData",
-                    method: "Post"
-                },
                 post: {
                     controller: "Transaction",
                     action: "@action",
                     method: "POST",
+                    params: { queryString: "@queryString" },
                     isArray: true
                 }
             }

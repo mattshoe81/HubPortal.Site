@@ -1,0 +1,53 @@
+﻿=================================================================================================================================
+|									  Context Free Grammar: Hub Portal Queries													|
+|							*Grammar to simplify complex queries independent of database*										|
+|===============================================================================================================================|
+|																																|
+|		LEGEND:																													|
+|			<>: Means a string of zero or more occurrences of the contents within <>											|
+|			| : Means OR																										|
+|			→ : Specifies the definition for a rewrite rule																		|
+|																																|
+|							  **camelCase and UPPERCASE indicate terminal symbols**												|
+=================================================================================================================================
+
+Query →
+		FINDALL SearchType WHERE <Refinement>
+		| GET Item WHERE <Refinement>
+
+SearchType →
+		StringList | transaction | outage | success | process | checkpoint
+
+StringList →
+		processList | clientList | transactionTypeList
+
+Item →
+		process | checkpoint | transaction | transactionType | client | processDetail
+
+Refinement →
+		{ Property : 'Value' }
+
+Value →
+		<Character | Digit>
+
+Property →
+		transactionType							| startDate								| endDate
+		| startTime								| endTime								| minTime
+		| pingOptions							| failed								| serverName
+		| sessionId								| ignore								| policyNumber
+		| referralNumber						| csr									| referralDate
+		| zipCode								| promoCode								| creditCardNumber
+		| ctu									| authorizationCode						| accountNumber
+		| orderID								| invoiceNumber							| genericSearchString
+		| claimNumber							| fnolNumber							| includeGenericStringInTransaction
+		| subcompany							| partNumber							| carID
+		| amount								| workOrderNumber						| workOrderID
+		| warehouseNumber						| shopNumber							| checkpoint
+		| lookupType							| processName							| clientName
+		| maxTime								| detail								| transactionid
+
+Character →
+		any character EXCEPT for single quote
+
+Digit →
+		0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9

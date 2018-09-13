@@ -43,6 +43,15 @@
                 <td class="label">URL:</td>
                 <td class="data" colspan="3">{{vm.transaction.url}}</td>
             </tr>
+            <tr>
+                <td class="label underline" colspan="4">
+                    <a href="{{vm.zipApi}}"
+                       target="_blank"
+                       download="hubTransaction.{{vm.transaction.processName}}.zip">
+                        Download Zip
+                    </a>
+                </td>
+            </tr>
         </table>
     </div>
 
@@ -102,7 +111,7 @@
                     <td class="label">Last 4 Digits on Card:</td>
                     <td class="data">{{vm.transaction.creditCardNumber}}</td>
                     <td class="label">Amount:</td>
-                    <td class="data">{{vm.transaction.amount}}</td>
+                    <td class="data">{{vm.transaction.amount | currency}}</td>
                 </tr>
                 <tr>
                     <td class="label">CTU:</td>
@@ -194,7 +203,7 @@
             <tr>
                 <td colspan="2">
                     <a ui-sref="checkpointMessage({checkpointid: checkpoint.checkpointId })">Message</a> &nbsp; &nbsp;
-                    <a ng-show="checkpoint.type.match('.*WS.*') || checkpoint.type.match('.*Web Service.*') || checkpoint.type.match('.*WebService.*')"
+                    <a ng-show="vm.hasEmbeddedMessage(checkpoint)"
                        ui-sref="checkpointEmbeddedMessage({checkpointid: checkpoint.checkpointId })">
                         Embedded Message
                     </a>
