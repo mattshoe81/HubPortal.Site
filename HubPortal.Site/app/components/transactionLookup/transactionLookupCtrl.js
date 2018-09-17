@@ -51,6 +51,7 @@
             fnolNumber: "",
             genericSearchString: "",
             includeGenericStringInTransaction: true,
+            excludeGenericString: false,
             invoiceNumber: "",
             lookupType: "coverage",
             maxTime: "",

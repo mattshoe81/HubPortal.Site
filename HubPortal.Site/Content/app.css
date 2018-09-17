@@ -37,6 +37,79 @@ a {
         cursor: pointer;
     }
 
+.button {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px 15px 5px 15px;
+    border: 0;
+    border-radius: 2px;
+    background-color: #aaa;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 85%;
+    line-height: 1.5;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+    .button:hover {
+        text-decoration: none;
+        color: white;
+    }
+
+    .button:active {
+        transform: scale(.9);
+    }
+
+.button-primary {
+    background-color: #337ab7;
+    color: lightgray;
+}
+
+.button-secondary {
+    background-color: #01c851;
+}
+
+.button-warning {
+    background-color: #ff3548;
+    color: white;
+}
+
+.dot {
+    height: 20px;
+    width: 20px;
+    background-color: #c1c1c1;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+    .dot.success {
+        background-color: #00bc07;
+    }
+
+    .dot.fail-dest {
+        background-color: #7a00e0;
+    }
+
+    .dot.fail {
+        background-color: #fe0000;
+    }
+
+    .dot.in-progress {
+        background-color: #e7c900;
+    }
+
+.button-icon {
+    display: inline-block;
+    position: relative;
+    top: -0.1em;
+    vertical-align: middle;
+    margin-right: 0.317rem;
+}
+
 .shrink-wrap {
     padding: 0;
     margin: 0;
@@ -314,7 +387,7 @@ th {
 .table-content {
     max-height: 500px;
     overflow-x: auto;
-    margin-top: 0px;
+    margin-top: 0;
     border: 1px solid rgba(255,255,255,0.3);
     background-color: var(--inactive-tab-color);
 }
@@ -471,4 +544,55 @@ input[type="datetime-local"][readonly] {
 
 input:not([type="checkbox"]):not([type="radio"]) {
     -webkit-appearance: textfield;
+}
+
+#process-status-header {
+    padding-left: 30px;
+}
+
+.status-column {
+    width: 8%;
+    text-align: center;
+}
+
+.duration-column {
+    width: 10%;
+    text-align: center;
+}
+
+.last-transaction-column {
+    width: 15%;
+    text-align: center;
+}
+
+.last-success-column {
+    width: 15%;
+    text-align: center;
+}
+
+.test-column {
+    width: 100px;
+}
+
+.activity-column {
+    width: 100px;
+    text-align: center;
+}
+
+.activate-column {
+    width: 125px;
+    text-align: center;
+}
+
+#process-status-table {
+    font-size: 85%;
+}
+
+#process-status-body {
+    padding-top: 3px;
+}
+
+button[disabled] {
+    background-color: var(--dark-gray);
+    cursor: no-drop;
 }

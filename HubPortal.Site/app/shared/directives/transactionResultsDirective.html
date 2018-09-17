@@ -1,0 +1,93 @@
+﻿<div ng-show="results.transactions.length > 0">
+
+    <hp-pager data-current-page-model="results.currentPage"
+              data-item-count="results.transactions.length"
+              data-items-per-page="results.transactionsPerPage"
+              ng-show="results.transactions.length > results.transactionsPerPage && results.displayType === 'list'">
+    </hp-pager>
+    <div class="table-container table-header-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="process-column"
+                        ng-click="results.transactionSortCriteria === '-processName' ? results.transactionSortCriteria = '+processName' : results.transactionSortCriteria = '-processName'">
+                        Process
+                    </th>
+                    <th class="type-column"
+                        ng-click="results.transactionSortCriteria === '-transactionTypeName' ? results.transactionSortCriteria = '+transactionTypeName' : results.transactionSortCriteria = '-transactionTypeName'">
+                        Transaction Type
+                    </th>
+                    <th class="start-time-column"
+                        ng-click="results.transactionSortCriteria === '-transactionTime' ? results.transactionSortCriteria = '+transactionTime' : results.transactionSortCriteria = '-transactionTime'">
+                        Start Time
+                    </th>
+                    <th class="checkpoints-column"
+                        ng-click="results.transactionSortCriteria === '-checkpointCount' ? results.transactionSortCriteria = '+checkpointCount' : results.transactionSortCriteria = '-checkpointCount'">
+                        Checkpoints
+                    </th>
+                    <th class="elapsed-column"
+                        ng-click="results.transactionSortCriteria === '-totalElapsedTime' ? results.transactionSortCriteria = '+totalElapsedTime' : results.transactionSortCriteria = '-totalElapsedTime'">
+                        Elapsed Time (s)
+                    </th>
+                    <th class="success-column"
+                        ng-click="results.transactionSortCriteria === '-successful' ? results.transactionSortCriteria = '+successful' : results.transactionSortCriteria = '-successful'">
+                        Successful?
+                    </th>
+                    <th class="ping-column"
+                        ng-click="results.transactionSortCriteria === '-pingFlag' ? results.transactionSortCriteria = '+pingFlag' : results.transactionSortCriteria = '-pingFlag'">
+                        Ping?
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="table-content table-container">
+        <table id="transaction-results">
+            <tbody ng-show="results.displayType === 'list'">
+                <tr ng-repeat="transaction in results.transactions
+                                | orderBy: results.transactionSortCriteria
+                                | startFrom: results.currentPage * results.transactionsPerPage
+                                | limitTo: results.transactionsPerPage">
+                    <td class="process-column">
+                        <a ui-sref="transactionDetail({transactionid: '{{transaction.transactionID}}' })"
+                           target="_blank">
+                            {{transaction.processName}}
+                        </a>
+                    </td>
+                    <td class="type-column">
+                        {{transaction.transactionTypeName}}
+                    </td>
+                    <td class="start-time-column">
+                        {{transaction.transactionTime | date:'MM/dd/yyyy hh:mm a'}}
+                    </td>
+                    <td class="checkpoints-column">
+                        {{transaction.checkpointCount}}
+                    </td>
+                    <td class="elapsed-column">
+                        <span ng-show="transaction">{{transaction.totalElapsedTime / 1000.000}}</span>
+                    </td>
+                    <td class="success-column">
+                        {{transaction.successful}}
+                    </td>
+                    <td class="ping-column">
+                        {{transaction.pingFlag}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h5 class="notification"
+            ng-show="results.transactions.length === 1 && results.transactions[0] === ''">
+            No results to display
+        </h5>
+        <div ng-hide="results.transactions[0] === ''">
+            <h5 class="notification"
+                ng-show="results.displayType === 'count' && results.transactions.length === 1">
+                {{results.transactions.length | number}} Results
+            </h5>
+            <h5 class="notification"
+                ng-show="results.displayType === 'count' && results.transactions.length !== 1">
+                {{results.transactions.length | number}} Results
+            </h5>
+        </div>
+    </div>
+</div>

@@ -4,20 +4,40 @@
     angular.module("shared.services")
         .factory("QueryBuilderService", [QueryBuilderService]);
 
+    /*
+     * To use the query builder service:
+     *      To begin, you must create a query with the getQuery function, which,
+     *      given a searchType and a queryType, will return a syntactically valid query string.
+     *      You may then append refinements to the query by calling the refinment function.
+     *      This query string is then submitted to the API and it will return the relevant results
+     *      based on the query string.
+     *
+     *      There are 2 type of selectionAction:
+     *          1. FINDALL - used to find a list of items
+     *          2. GET - used to find a single item
+     *
+     *      The parameter criteriaType in the getQuery method must be either a 'SearchType' or an 'Item',
+     *      whose values are specified in detail in the context free grammar definition at the filepath:
+     *      HubPortal.Site/ContextFreeGrammar.txt
+     *
+     *      For information on all other parameters, please see HubPortal.Site/ContextFreeGrammar.txt
+     *
+     */
+
     function QueryBuilderService() {
         "use strict";
 
-        function getQuery(query, queryType) {
-            return query + " " + queryType + " WHERE";
+        function getQuery(selectionAction, criteriaType) {
+            return selectionAction + " " + criteriaType + " WHERE";
         }
 
-        function refine(property, value) {
+        function refinement(property, value) {
             return " { " + property + " : '" + value + "' }";
         }
 
         return {
             getQuery: getQuery,
-            refine: refine,
+            refinement: refinement,
             symbols: {
                 ALL: "All",
                 ACCOUNT_NUMBER: "accountNumber",

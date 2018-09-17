@@ -1,1 +1,80 @@
-﻿<h3>{{vm.title}}</h3>
+﻿<hp-transaction-results data-transactions="vm.transactions"></hp-transaction-results>
+
+<div id="process-status-header" class="title-panel">
+    <table>
+        <thead>
+            <tr>
+                <th class="status-column">Status</th>
+                <th class="process-column">Process</th>
+                <th class="duration-column">Duration</th>
+                <th class="last-transaction-column">Last Transaction</th>
+                <th class="last-success-column">Last Successful</th>
+                <th class="test-column"></th>
+                <!--<th class="activate-column"></th>-->
+                <th class="activity-column"></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div id="process-status-body" class="panel-body">
+
+    <table id="process-status-table">
+        <tbody>
+            <tr ng-repeat="process in vm.process.active | orderBy: 'status':false:vm.comparator">
+                <td class="status-column">
+                    <span class="dot" title="INACTIVE" ng-show="process.status === 'N'"></span>
+                    <span class="dot" title="INACTIVE" ng-show="process.status === 'D'"></span>
+                    <span class="dot success" title="SUCCESSFUL" ng-show="process.status === 'S'"></span>
+                    <span class="dot fail-dest" title="FAILURE AT DESTINATION" ng-show="process.status === 'C'"></span>
+                    <span class="dot fail" title="FAILURE" ng-show="process.status === 'P'"></span>
+                    <span class="dot in-progress" title="IN PROGRESS" ng-show="process.status === 'I'"></span>
+                </td>
+                <td class="process-column">
+                    {{process.processName}} &nbsp;
+                    <!--<i class="fa fa-warning"
+                       ng-show="!process.pingDesirable"
+                       title="Process should only be activated for one-time tests and should be immediately deactivated"></i>-->
+                </td>
+                <td class="duration-column">{{process.duration / 1000.0}} s</td>
+                <td class="last-transaction-column">{{process.pingTime | date: 'MM/dd/yyyy hh:mm a'}}</td>
+                <td class="last-success-column">{{process.successPingTime | date: 'MM/dd/yyyy hh:mm a'}}</td>
+                <td class="test-column">
+                    <button href=""
+                            class="button"
+                            ng-disabled="process.loading"
+                            ng-click="vm.testPing(process)"
+                            ng-show="process.pingable">
+                        <span ng-hide="process.loading">Test</span>
+                        <span ng-show="process.loading">Loading...</span>
+                    </button>
+                    <!--<i class="fa fa-warning"
+                       ng-show="!process.pingDesirable && process.pingable"
+                       title="Process should only be activated for one-time tests and should be immediately deactivated"></i>-->
+                </td>
+                <!--<td class="activate-column">
+                    <a href=""
+                       class="button button-warning"
+                       ng-click="vm.togglePingEnabled(process)"
+                       ng-disabled="process.disabled"
+                       ng-show="process.active && process.pingable && !process.loading">Deactivate</a>
+                    <a href=""
+                       class="button button-secondary"
+                       ng-click="vm.togglePingEnabled(process)"
+                       ng-disabled="process.disabled"
+                       ng-hide="process.active && process.pingable && !process.loading">Activate</a>
+                </td>-->
+                <td class="activity-column">
+                    <button href=""
+                            ng-disabled="process.loading"
+                            ng-click="vm.getProcessActivity(process)"
+                            class="button button-primary">
+
+                        <span ng-hide="process.loading">Activity</span>
+                        <span ng-show="process.loading">Loading...</span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -11,13 +11,13 @@
         <li class="page-item"
             ng-show="pager.currentPageModel >= 10"
             ng-click="pager.adjustCurrentPage(0)">
-            <a class="page-link" href="#">1</a>
+            <a class="page-link" href="">1</a>
         </li>
         <li class="page-item"
             ng-show="pager.currentPageModel >= 10">
             <a class="page-link"
                ng-click="pager.adjustCurrentPage((pager.pagerStart - 1) * 10)"
-               href="#">
+               href="">
                 <i class="fa fa-chevron-left"></i>
             </a>
         </li>
@@ -27,7 +27,7 @@
             ng-show="pager.data.indexOf(item) < (pager.itemCount / pager.itemsPerPage)">
             <a class="page-link"
                ng-click="pager.adjustCurrentPage(pager.data.indexOf(item))"
-               href="#">
+               href="">
                 {{pager.data.indexOf(item) + 1}}
             </a>
         </li>
@@ -35,7 +35,7 @@
             ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10))">
             <a class="page-link"
                ng-click="pager.adjustCurrentPage((pager.pagerStart + 1) * 10)"
-               href="#">
+               href="">
                 <i class="fa fa-chevron-right"></i>
             </a>
         </li>
@@ -43,7 +43,7 @@
             ng-show="pager.numberOfPages > 10 && pager.currentPageModel < (pager.numberOfPages - (pager.numberOfPages % 10))">
             <a class="page-link"
                ng-click="pager.adjustCurrentPage(pager.numberOfPages - 1)"
-               href="#">{{pager.numberOfPages}}</a>
+               href="">{{pager.numberOfPages}}</a>
         </li>
         <li class="page-item">
             <button class="btn btn-page"

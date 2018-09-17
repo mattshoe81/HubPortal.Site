@@ -63,7 +63,15 @@
                 .state("processStatus", {
                     url: ROUTE_PREFIX + "processStatus",
                     templateUrl: "app/components/processStatus/processStatusView.html",
-                    controller: "ProcessStatusCtrl as vm"
+                    controller: "ProcessStatusCtrl as vm",
+                    resolve: {
+                        ActiveProcesses: ["ProcessResource", function (ProcessResource) {
+                            return ProcessResource.query({ action: "GetActiveProcesses" });
+                        }],
+                        InactiveProcesses: ["ProcessResource", function (ProcessResource) {
+                            return ProcessResource.query({ action: "GetInactiveProcesses" });
+                        }]
+                    }
                 })
                 .state("responseTimeTracking", {
                     url: ROUTE_PREFIX + "responseTimeTracking",

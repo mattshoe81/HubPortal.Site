@@ -1,96 +1,7 @@
-﻿<div ng-show="vm.form.transactions.length > 0">
-
-    <hp-pager data-current-page-model="vm.currentPage"
-              data-item-count="vm.form.transactions.length"
-              data-items-per-page="vm.form.transactionsPerPage"
-              ng-show="vm.form.transactions.length > vm.form.transactionsPerPage && vm.resultDisplay === 'list'">
-    </hp-pager>
-    <div class="table-container table-header-container">
-        <table>
-            <thead>
-                <tr>
-                    <th class="process-column"
-                        ng-click="vm.transactionSortCriteria === '-processName' ? vm.transactionSortCriteria = '+processName' : vm.transactionSortCriteria = '-processName'">
-                        Process
-                    </th>
-                    <th class="type-column"
-                        ng-click="vm.transactionSortCriteria === '-transactionTypeName' ? vm.transactionSortCriteria = '+transactionTypeName' : vm.transactionSortCriteria = '-transactionTypeName'">
-                        Transaction Type
-                    </th>
-                    <th class="start-time-column"
-                        ng-click="vm.transactionSortCriteria === '-transactionTime' ? vm.transactionSortCriteria = '+transactionTime' : vm.transactionSortCriteria = '-transactionTime'">
-                        Start Time
-                    </th>
-                    <th class="checkpoints-column"
-                        ng-click="vm.transactionSortCriteria === '-checkpointCount' ? vm.transactionSortCriteria = '+checkpointCount' : vm.transactionSortCriteria = '-checkpointCount'">
-                        Checkpoints
-                    </th>
-                    <th class="elapsed-column"
-                        ng-click="vm.transactionSortCriteria === '-totalElapsedTime' ? vm.transactionSortCriteria = '+totalElapsedTime' : vm.transactionSortCriteria = '-totalElapsedTime'">
-                        Elapsed Time (s)
-                    </th>
-                    <th class="success-column"
-                        ng-click="vm.transactionSortCriteria === '-successful' ? vm.transactionSortCriteria = '+successful' : vm.transactionSortCriteria = '-successful'">
-                        Successful?
-                    </th>
-                    <th class="ping-column"
-                        ng-click="vm.transactionSortCriteria === '-pingFlag' ? vm.transactionSortCriteria = '+pingFlag' : vm.transactionSortCriteria = '-pingFlag'">
-                        Ping?
-                    </th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-    <div class="table-content table-container">
-        <table id="transaction-results">
-            <tbody ng-show="vm.resultDisplay === 'list'">
-                <tr ng-repeat="transaction in vm.form.transactions
-                                | orderBy: vm.transactionSortCriteria
-                                | startFrom: vm.currentPage * vm.form.transactionsPerPage
-                                | limitTo: vm.form.transactionsPerPage">
-                    <td class="process-column">
-                        <a ui-sref="transactionDetail({transactionid: '{{transaction.transactionID}}' })"
-                           target="_blank">
-                            {{transaction.processName}}
-                        </a>
-                    </td>
-                    <td class="type-column">
-                        {{transaction.transactionTypeName}}
-                    </td>
-                    <td class="start-time-column">
-                        {{transaction.transactionTime | date: 'MM/dd/yyyy hh:mm a'}}
-                    </td>
-                    <td class="checkpoints-column">
-                        {{transaction.checkpointCount}}
-                    </td>
-                    <td class="elapsed-column">
-                        <span ng-show="transaction">{{transaction.totalElapsedTime / 1000.000}}</span>
-                    </td>
-                    <td class="success-column">
-                        {{transaction.successful}}
-                    </td>
-                    <td class="ping-column">
-                        {{transaction.pingFlag}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <h5 class="notification"
-            ng-show="vm.form.transactions.length === 1 && vm.form.transactions[0] === ''">
-            No results to display
-        </h5>
-        <div ng-hide="vm.form.transactions[0] === ''">
-            <h5 class="notification"
-                ng-show="vm.resultDisplay === 'count' && vm.form.transactions.length === 1">
-                {{vm.form.transactions.length | number}} Results
-            </h5>
-            <h5 class="notification"
-                ng-show="vm.resultDisplay === 'count' && vm.form.transactions.length !== 1">
-                {{vm.form.transactions.length | number}} Results
-            </h5>
-        </div>
-    </div>
-</div>
+﻿<hp-transaction-results data-transactions="vm.form.transactions"
+                        data-transactions-per-page="vm.form.transactionsPerPage"
+                        data-display-type="vm.resultDisplay">
+</hp-transaction-results>
 
 <form>
     <div>
@@ -508,8 +419,8 @@
                             Exclude search string from transaction?
                             <input style="margin-left: 15px;"
                                    type="checkbox"
-                                   ng-model="vm.form.includeGenericStringInTransaction"
-                                   ng-click="vm.form.includeGenericStringInTransaction = !vm.form.includeGenericStringInTransaction;"
+                                   ng-model="vm.form.excludeGenericString"
+                                   ng-click="vm.form.excludeGenericString = !vm.form.excludeGenericString;"
                                    checked>
                         </div>
                     </div>
