@@ -1,4 +1,8 @@
-﻿<hp-transaction-results data-transactions="vm.transactions"></hp-transaction-results>
+﻿<div class="text-center fill-h">
+    <em>Note: "Test" functionality is not implemented on this page.</em>
+</div>
+
+<hp-transaction-results data-transactions="vm.transactions"></hp-transaction-results>
 
 <div id="process-status-header" class="title-panel">
     <table>
@@ -45,7 +49,7 @@
                             ng-disabled="process.loading"
                             ng-click="vm.testPing(process)"
                             ng-show="process.pingable">
-                        <span ng-hide="process.loading">Test</span>
+                        <span ng-hide="process.loading" title="Feature Not Implemented">Test</span>
                         <span ng-show="process.loading">Loading...</span>
                     </button>
                     <!--<i class="fa fa-warning"

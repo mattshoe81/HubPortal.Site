@@ -7,11 +7,12 @@
 
     function CheckpointEmbeddedMessageCtrl(CheckpointMessage) {
         var vm = this;
-        vm.message = "";
-        CheckpointMessage.$promise.then(function (response) {
-            angular.forEach(response, function (char) {
-                vm.message += char;
-            });
+        vm.message = "Loading...";
+        CheckpointMessage.$promise.then(function (message) {
+            vm.message = message.messageData;
+        }, function (error) {
+            console.log("Unable to fetch checkpoint message", error.message);
+            message = "Unable to load checkpoint data";
         });
     }
 }());

@@ -591,3 +591,10 @@ input:not([type="checkbox"]):not([type="radio"]) {
 #process-status-body {
     padding-top: 3px;
 }
+
+.checkpoint-message {
+    word-wrap: break-word;
+    width: 100%;
+    font-family: monospace;
+    font-size: 90%;
+}

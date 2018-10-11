@@ -89,17 +89,17 @@
                     controller: "CheckpointMessageCtrl as vm",
                     resolve: {
                         CheckpointMessage: ["CheckpointResource", "$stateParams", function (CheckpointResource, $stateParams) {
-                            return CheckpointResource.query({ action: "GetMessage", checkpointid: $stateParams.checkpointid });
+                            return CheckpointResource.get({ action: "GetMessage", checkpointid: $stateParams.checkpointid }, { isArray: false });
                         }]
                     }
                 })
                 .state("checkpointEmbeddedMessage", {
-                    url: ROUTE_PREFIX + "checkpoint/message/embedded/:checkpointid",
+                    url: ROUTE_PREFIX + "checkpoint/message/embedded/:checkpointid/:location",
                     templateUrl: "app/components/transactionLookup/checkpointEmbeddedMessageView.html",
                     controller: "CheckpointEmbeddedMessageCtrl as vm",
                     resolve: {
                         CheckpointMessage: ["CheckpointResource", "$stateParams", function (CheckpointResource, $stateParams) {
-                            return CheckpointResource.get({ action: "GetEmbeddedMessage", checkpointid: $stateParams.checkpointid });
+                            return CheckpointResource.get({ action: "GetEmbeddedMessage", checkpointid: $stateParams.checkpointid, location: $stateParams.location });
                         }]
                     }
                 });

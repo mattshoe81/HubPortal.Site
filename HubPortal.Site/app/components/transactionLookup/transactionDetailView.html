@@ -176,7 +176,7 @@
         <table>
             <tr>
                 <td class="label">Location:</td>
-                <td class="data">{{checkpoint.location}}</td>
+                <td class="data">{{checkpoint.locationMessage}}</td>
             </tr>
             <tr>
                 <td class="label">Server:</td>
@@ -202,9 +202,13 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a ui-sref="checkpointMessage({checkpointid: checkpoint.checkpointId })">Message</a> &nbsp; &nbsp;
+                    <a ui-sref="checkpointMessage({checkpointid: checkpoint.checkpointId })"
+                       target="_blank">
+                        Message
+                    </a> &nbsp; &nbsp;
                     <a ng-show="vm.hasEmbeddedMessage(checkpoint)"
-                       ui-sref="checkpointEmbeddedMessage({checkpointid: checkpoint.checkpointId })">
+                       ui-sref="checkpointEmbeddedMessage({checkpointid: checkpoint.checkpointId, location: checkpoint.location })"
+                       target="_blank">
                         Embedded Message
                     </a>
                 </td>

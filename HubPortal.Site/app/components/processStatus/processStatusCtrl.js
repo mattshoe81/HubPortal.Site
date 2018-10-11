@@ -20,20 +20,20 @@
             inactive: InactiveProcesses
         };
 
-        vm.testPing = function (process) {
-            process.loading = true;
-            console.log("Pretending to ping '" + process.processName + "'");
-            PingService.test(process.processName)
-                .then(
-                    function (response) {
-                        process.loading = false;
-                        console.log(response);
-                    }, function (error) {
-                        process.loading = false;
-                        console.log(error);
-                    }
-                );
-        }
+        //vm.testPing = function (process) {
+        //    process.loading = true;
+        //    console.log("Pretending to ping '" + process.processName + "'");
+        //    PingService.test(process.processName)
+        //        .then(
+        //            function (response) {
+        //                process.loading = false;
+        //                console.log(response);
+        //            }, function (error) {
+        //                process.loading = false;
+        //                console.log(error);
+        //            }
+        //        );
+        //}
 
         vm.transactions = [];
         var queryString = "FINDALL transaction WHERE";

@@ -19,9 +19,25 @@
             vm.transaction.hasWholesaleInfo = hasWholesaleInfo(vm.transaction);
             vm.transaction.hasShopInfo = hasShopInfo(vm.transaction);
             // Format Y or N to Yes or No
-            vm.transaction.successful === "Y" || vm.transaction.successful === "y" ? vm.transaction.successful = "Yes" : vm.transaction.successful = "No";
+            switch (vm.transaction.successful) {
+                case "Y":
+                    vm.transaction.successful = "Yes";
+                    break;
+                case "N":
+                    vm.transaction.successful = "No";
+                    break;
+                case "U":
+                    vm.transaction.successful = "Unknown";
+                    break;
+                case "-":
+                    vm.transaction.successful = "-";
+                    break;
+                default:
+                    vm.transaction.successful = "Unknown";
+                    break;
+            }
             vm.transaction.ping === "Y" || vm.transaction.ping === "y" ? vm.transaction.ping = "Yes" : vm.transaction.ping = "No";
-            // Don't think i like this. Straightforward enough though
+            // Don't think i like this. Straightforward enough, but hacky
             vm.zipApi = API.replace(":controller", "Transaction").replace(":action", "Zip") + "?id=" + vm.transaction.transactionId;
         });
         Checkpoints.$promise.then(function (checkpoints) {
@@ -35,40 +51,42 @@
                 checkpoint.time = new Date(checkpoint.time);
                 checkpoint.elapsedTime = Math.abs(checkpoint.time.getTime() - previousCheckpointTime) / 1000.0;
                 previousCheckpointTime = checkpoint.time.getTime();
+                checkpoint.embeddedMessageLink = API.replace(":controller", "Checkpoint").replace(":action", "GetEmbeddedMessage") + "?checkpointid=" + checkpoint.checkpointId + "&location=" + checkpoint.location;
+                checkpoint.messageLink = API.replace(":controller", "Checkpoint").replace(":action", "GetMessage") + "?checkpointid=" + checkpoint.checkpointId;
             });
             vm.checkpoints = checkpoints;
         });
         // Need transaction and checkpoints to build location messages, so have to wait until they're both resolved
         $q.all([TransactionDetail.$promise, Checkpoints.$promise]).then(function () {
-            vm.checkpoints.map(checkpoint => checkpoint.location = generateLocationMessage(checkpoint, vm.transaction));
+            vm.checkpoints.map(checkpoint => checkpoint.locationMessage = generateLocationMessage(checkpoint, vm.transaction));
         });
 
         function generateLocationMessage(checkpoint, transaction) {
-            var location = "";
+            var locationMessage = "";
             switch (checkpoint.location) {
                 case "OUTBOUND_REQUEST":
-                    location = "Request sent to " + transaction.destination;
+                    locationMessage = "Request sent to " + transaction.destination;
                     break;
                 case "OUTBOUND_RESPONSE":
-                    location = "Response sent to " + transaction.source;
+                    locationMessage = "Response sent to " + transaction.source;
                     break;
                 case "INBOUND_REQUEST":
-                    location = "Request received from " + transaction.source;
+                    locationMessage = "Request received from " + transaction.source;
                     break;
                 case "INBOUND_RESPONSE":
-                    location = "Response received from " + transaction.destination;
+                    locationMessage = "Response received from " + transaction.destination;
                     break;
                 case "INTRAHUB_REQUEST":
-                    location = "Intrahub Request";
+                    locationMessage = "Intrahub Request";
                     break;
                 case "INTRAHUB_RESPONSE":
-                    location = "Intrahub Response";
+                    locationMessage = "Intrahub Response";
                     break;
                 default:
-                    location = checkpoint.location;
+                    locationMessage = checkpoint.location;
                     break;
             }
-            return location;
+            return locationMessage;
         }
 
         vm.hasEmbeddedMessage = function (checkpoint) {
