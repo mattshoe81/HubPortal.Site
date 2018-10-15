@@ -7,7 +7,7 @@
     function CheckpointResource($resource, API) {
         return $resource(API,
             {
-                controller: "Checkpoint",
+                controller: "checkpoint",
                 action: "@action"
             }
         );

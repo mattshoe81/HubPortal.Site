@@ -7,12 +7,12 @@
     function TransactionResource($resource, API) {
         return $resource(API,
             {
-                controller: "Transaction",
+                controller: "transaction",
                 action: "@action"
             },
             {
                 post: {
-                    controller: "Transaction",
+                    controller: "transaction",
                     action: "@action",
                     method: "POST",
                     params: { queryString: "@queryString" },

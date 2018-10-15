@@ -30,13 +30,13 @@
                     controller: "TransactionLookupCtrl as vm",
                     resolve: {
                         ProcessList: ["ProcessResource", function (ProcessResource) {
-                            return ProcessResource.query({ action: "Get" });
+                            return ProcessResource.query();
                         }],
                         ClientList: ["ClientResource", function (ClientResource) {
-                            return ClientResource.query({ action: "Get" });
+                            return ClientResource.query();
                         }],
                         TransactionTypeList: ["TransactionResource", function (TransactionResource) {
-                            return TransactionResource.query({ action: "GetTypes" });
+                            return TransactionResource.query();
                         }]
                     }
                 })

@@ -5,6 +5,6 @@
         .factory("ClientResource", ["$resource", "API", ClientResource]);
 
     function ClientResource($resource, API) {
-        return $resource(API, { controller: "Client", action: "@action" });
+        return $resource(API, { controller: "client", action: "@action" });
     }
 }());
