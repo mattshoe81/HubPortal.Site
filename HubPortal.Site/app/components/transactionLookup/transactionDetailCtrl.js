@@ -16,7 +16,7 @@
             vm.transaction = details;
             angular.forEach(details.hits.hits, function (searchResult) {
                 var checkpoint = searchResult._source;
-                if (checkpoint.transactionType) vm.transaction = checkpoint;
+                if (checkpoint.process) vm.transaction = checkpoint;
             })
             vm.transaction.hasCoverageInfo = hasCoverageInfo(vm.transaction);
             vm.transaction.hasCreditCardInfo = hasCreditCardInfo(vm.transaction);
