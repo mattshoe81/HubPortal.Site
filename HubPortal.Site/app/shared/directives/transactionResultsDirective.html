@@ -10,15 +10,15 @@
             <thead>
                 <tr>
                     <th class="process-column"
-                        ng-click="results.transactionSortCriteria === '-processName' ? results.transactionSortCriteria = '+processName' : results.transactionSortCriteria = '-processName'">
+                        ng-click="results.transactionSortCriteria === '-process' ? results.transactionSortCriteria = '+process' : results.transactionSortCriteria = '-process'">
                         Process
                     </th>
                     <th class="type-column"
-                        ng-click="results.transactionSortCriteria === '-transactionTypeName' ? results.transactionSortCriteria = '+transactionTypeName' : results.transactionSortCriteria = '-transactionTypeName'">
+                        ng-click="results.transactionSortCriteria === '-transactionType' ? results.transactionSortCriteria = '+transactionType' : results.transactionSortCriteria = '-transactionType'">
                         Transaction Type
                     </th>
                     <th class="start-time-column"
-                        ng-click="results.transactionSortCriteria === '-transactionTime' ? results.transactionSortCriteria = '+transactionTime' : results.transactionSortCriteria = '-transactionTime'">
+                        ng-click="results.transactionSortCriteria === '-transTime' ? results.transactionSortCriteria = '+transTime' : results.transactionSortCriteria = '-transTime'">
                         Start Time
                     </th>
                     <th class="checkpoints-column"
@@ -49,16 +49,16 @@
                                 | startFrom: results.currentPage * results.transactionsPerPage
                                 | limitTo: results.transactionsPerPage">
                     <td class="process-column">
-                        <a ui-sref="transactionDetail({transactionid: '{{transaction.transactionID}}' })"
+                        <a ui-sref="transactionDetail({transactionid: '{{transaction.transactionId}}' })"
                            target="_blank">
-                            {{transaction.processName}}
+                            {{transaction.process}}
                         </a>
                     </td>
                     <td class="type-column">
-                        {{transaction.transactionTypeName}}
+                        {{transaction.transactionType}}
                     </td>
                     <td class="start-time-column">
-                        {{transaction.transactionTime | date:'MM/dd/yyyy hh:mm a'}}
+                        {{transaction.transTime | date:'MM/dd/yyyy hh:mm a'}}
                     </td>
                     <td class="checkpoints-column">
                         {{transaction.checkpointCount}}

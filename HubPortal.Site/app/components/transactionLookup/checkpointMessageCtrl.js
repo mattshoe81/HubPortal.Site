@@ -7,6 +7,7 @@
 
     function CheckpointMessageCtrl(CheckpointMessage) {
         var vm = this;
-        vm.message = CheckpointMessage;
+        vm.message = "Loading...";
+        vm.message = CheckpointMessage.hits.hits[0]._source.message;
     }
 }());

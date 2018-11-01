@@ -30,13 +30,13 @@
                     controller: "TransactionLookupCtrl as vm",
                     resolve: {
                         ProcessList: ["ProcessResource", function (ProcessResource) {
-                            return ProcessResource.query();
+                            return "";//ProcessResource.query();
                         }],
                         ClientList: ["ClientResource", function (ClientResource) {
-                            return ClientResource.query();
+                            return "";//ClientResource.query();
                         }],
                         TransactionTypeList: ["TransactionResource", function (TransactionResource) {
-                            return TransactionResource.query();
+                            return "";//TransactionResource.query();
                         }]
                     }
                 })
@@ -47,11 +47,11 @@
                     resolve: {
                         TransactionDetail: ["TransactionResource", "$stateParams", function (TransactionResource, $stateParams) {
                             var transactionid = $stateParams.transactionid;
-                            return TransactionResource.get({ action: "GetById", transactionid: transactionid });
+                            return TransactionResource.get({ q: "(transactionId:\"" + transactionid + "\")" });
                         }],
                         Checkpoints: ["CheckpointResource", "$stateParams", function (CheckpointResource, $stateParams) {
                             var transactionid = $stateParams.transactionid;
-                            return CheckpointResource.query({ action: "Get", transactionid: transactionid });
+                            return CheckpointResource.get({ q: "(transactionId:\"" + transactionid + "\")&sort=time:asc" });
                         }]
                     }
                 })
@@ -89,7 +89,7 @@
                     controller: "CheckpointMessageCtrl as vm",
                     resolve: {
                         CheckpointMessage: ["CheckpointResource", "$stateParams", function (CheckpointResource, $stateParams) {
-                            return CheckpointResource.query({ action: "GetMessage", checkpointid: $stateParams.checkpointid });
+                            return CheckpointResource.get({ q: "checkpointId:\"" + $stateParams.checkpointid + "\"" });
                         }]
                     }
                 })
