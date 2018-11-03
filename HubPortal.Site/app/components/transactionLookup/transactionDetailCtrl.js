@@ -3,55 +3,47 @@
 
     angular
         .module("hubPortal")
-        .controller("TransactionDetailCtrl", ["TransactionDetail", "Checkpoints", "API", "$q", TransactionDetailCtrl]);
+        .controller("TransactionDetailCtrl", ["Checkpoints", TransactionDetailCtrl]);
 
-    function TransactionDetailCtrl(TransactionDetail, Checkpoints, API, $q) {
+    function TransactionDetailCtrl(Checkpoints) {
         var vm = this;
-        vm.transaction = TransactionDetail;
-        vm.checkpoints = Checkpoints;
+        vm.transaction = {};
+        vm.checkpoints = [];
         vm.zipApi = "";
         var previousCheckpointTime = 0;
 
-        TransactionDetail.$promise.then(function (details) {
-            vm.transaction = details;
-            angular.forEach(details.hits.hits, function (searchResult) {
-                var checkpoint = searchResult._source;
-                if (checkpoint.process) vm.transaction = checkpoint;
-            })
-            vm.transaction.hasCoverageInfo = hasCoverageInfo(vm.transaction);
-            vm.transaction.hasCreditCardInfo = hasCreditCardInfo(vm.transaction);
-            vm.transaction.hasWholesaleInfo = hasWholesaleInfo(vm.transaction);
-            vm.transaction.hasShopInfo = hasShopInfo(vm.transaction);
-            // Format Y or N to Yes or No
-            vm.transaction.successful === "Y" || vm.transaction.successful === "y" ? vm.transaction.successful = "Yes" : vm.transaction.successful = "No";
-            vm.transaction.ping === "Y" || vm.transaction.ping === "y" ? vm.transaction.ping = "Yes" : vm.transaction.ping = "No";
-            // Don't think i like this. Straightforward enough though
-            vm.zipApi = API.replace(":controller", "Transaction").replace(":action", "Zip") + "?id=" + vm.transaction.transactionId;
-        });
+        // Process the checkpoints for this transaction once they're resolved
         Checkpoints.$promise.then(function (results) {
             var checkpoints = [];
             angular.forEach(results.hits.hits, function (searchResult) {
                 var checkpoint = searchResult._source;
                 checkpoint.id = searchResult._id;
+                if (checkpoint.process) vm.transaction = checkpoint;
                 checkpoints.push(checkpoint);
             });
-            //checkpoints.sort((a, b) => (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0));
-            // Initialize the previousCheckpointTime if not null
-            if (checkpoints[0]) {
-                checkpoints[0].time = new Date(checkpoints[0].time);
-                previousCheckpointTime = checkpoints[0].time.getTime();
-            }
-            // Calculate the elapsed time for each checkpoint and convert UTC strings to date objects
+
+            // Determine what kind of info to display
+            vm.transaction.hasCoverageInfo = hasCoverageInfo(vm.transaction);
+            vm.transaction.hasCreditCardInfo = hasCreditCardInfo(vm.transaction);
+            vm.transaction.hasWholesaleInfo = hasWholesaleInfo(vm.transaction);
+            vm.transaction.hasShopInfo = hasShopInfo(vm.transaction);
+
+            // Format Y or N to Yes or No
+            vm.transaction.successful === "Y" || vm.transaction.successful === "y" ? vm.transaction.successful = "Yes" : vm.transaction.successful = "No";
+            vm.transaction.ping === "Y" || vm.transaction.ping === "y" ? vm.transaction.ping = "Yes" : vm.transaction.ping = "No";
+
+            // Calculate the elapsed time for each checkpoint and convert unix epoch number to date objects,
+            // and generate the location messages for each checkpoint
+            checkpoints[0].time = new Date(checkpoints[0].time);
+            previousCheckpointTime = checkpoints[0].time.getTime();
             angular.forEach(checkpoints, function (checkpoint) {
+                checkpoint.location = generateLocationMessage(checkpoint, vm.transaction)
                 checkpoint.time = new Date(checkpoint.time);
                 checkpoint.elapsedTime = Math.abs(checkpoint.time.getTime() - previousCheckpointTime) / 1000.0;
                 previousCheckpointTime = checkpoint.time.getTime();
             });
+
             vm.checkpoints = checkpoints;
-        });
-        // Need transaction and checkpoints to build location messages, so have to wait until they're both resolved
-        $q.all([TransactionDetail.$promise, Checkpoints.$promise]).then(function () {
-            vm.checkpoints.map(checkpoint => checkpoint.location = generateLocationMessage(checkpoint, vm.transaction));
         });
 
         function generateLocationMessage(checkpoint, transaction) {
