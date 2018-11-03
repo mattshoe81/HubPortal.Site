@@ -14,6 +14,10 @@
 
         TransactionDetail.$promise.then(function (details) {
             vm.transaction = details;
+            angular.forEach(details.hits.hits, function (searchResult) {
+                var checkpoint = searchResult._source;
+                if (checkpoint.process) vm.transaction = checkpoint;
+            })
             vm.transaction.hasCoverageInfo = hasCoverageInfo(vm.transaction);
             vm.transaction.hasCreditCardInfo = hasCreditCardInfo(vm.transaction);
             vm.transaction.hasWholesaleInfo = hasWholesaleInfo(vm.transaction);
@@ -40,7 +44,13 @@
             // Don't think i like this. Straightforward enough, but hacky
             vm.zipApi = API.replace(":controller", "Transaction").replace(":action", "Zip") + "?id=" + vm.transaction.transactionId;
         });
-        Checkpoints.$promise.then(function (checkpoints) {
+        Checkpoints.$promise.then(function (results) {
+            var checkpoints = [];
+            angular.forEach(results.hits.hits, function (searchResult) {
+                var checkpoint = searchResult._source;
+                checkpoints.push(checkpoint);
+            });
+            //checkpoints.sort((a, b) => (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0));
             // Initialize the previousCheckpointTime if not null
             if (checkpoints[0]) {
                 checkpoints[0].time = new Date(checkpoints[0].time);
@@ -90,9 +100,9 @@
         }
 
         vm.hasEmbeddedMessage = function (checkpoint) {
-            var match1 = checkpoint.type.match('.*WS.*');
-            var match2 = checkpoint.type.match('.*Web Service.*');
-            var match3 = checkpoint.type.match('.*WebService.*');
+            var match1 = checkpoint.checkpointType.match('.*WS.*');
+            var match2 = checkpoint.checkpointType.match('.*Web Service.*');
+            var match3 = checkpoint.checkpointType.match('.*WebService.*');
             var result = Boolean(match1) || Boolean(match2) || Boolean(match3);
             return result;
         };

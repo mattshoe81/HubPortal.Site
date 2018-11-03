@@ -7,9 +7,9 @@
         <table>
             <tr>
                 <td class="label">Process Name:</td>
-                <td class="data">{{vm.transaction.processName}}</td>
+                <td class="data">{{vm.transaction.process}}</td>
                 <td class="label">Session ID:</td>
-                <td class="data">{{vm.transaction.sessionID}}</td>
+                <td class="data">{{vm.transaction.sessionId}}</td>
             </tr>
             <tr>
                 <td class="label">Source:</td>
@@ -27,7 +27,7 @@
                 <td class="label">Successful:</td>
                 <td class="data">{{vm.transaction.successful}}</td>
                 <td class="label">Ping:</td>
-                <td class="data">{{vm.transaction.ping}}</td>
+                <td class="data">{{vm.transaction.pingFlag}}</td>
             </tr>
             <tr>
                 <td class="label">Source Type:</td>
@@ -47,7 +47,7 @@
                 <td class="label underline" colspan="4">
                     <a href="{{vm.zipApi}}"
                        target="_blank"
-                       download="hubTransaction.{{vm.transaction.processName}}.zip">
+                       download="hubTransaction.{{vm.transaction.process}}.zip">
                         Download Zip
                     </a>
                 </td>
@@ -176,7 +176,7 @@
         <table>
             <tr>
                 <td class="label">Location:</td>
-                <td class="data">{{checkpoint.locationMessage}}</td>
+                <td class="data">{{checkpoint.location}}</td>
             </tr>
             <tr>
                 <td class="label">Server:</td>
@@ -190,7 +190,7 @@
             </tr>
             <tr>
                 <td class="label">Type:</td>
-                <td class="data">{{checkpoint.type}}</td>
+                <td class="data">{{checkpoint.checkpointType}}</td>
             </tr>
             <tr>
                 <td class="label">Elapsed Time:</td>
@@ -205,12 +205,13 @@
                     <a ui-sref="checkpointMessage({checkpointid: checkpoint.checkpointId })"
                        target="_blank">
                         Message
-                    </a> &nbsp; &nbsp;
-                    <a ng-show="vm.hasEmbeddedMessage(checkpoint)"
-                       ui-sref="checkpointEmbeddedMessage({checkpointid: checkpoint.checkpointId, location: checkpoint.location })"
+                    </a>
+                    &nbsp; &nbsp;
+                    <!--<a ng-show="vm.hasEmbeddedMessage(checkpoint)"
+                       ui-sref="checkpointEmbeddedMessage({checkpointid: checkpoint.checkpointId })"
                        target="_blank">
                         Embedded Message
-                    </a>
+                    </a>-->
                 </td>
             </tr>
         </table>

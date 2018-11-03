@@ -27,24 +27,34 @@
     function QueryBuilderService() {
         "use strict";
 
-        function getQuery(selectionAction, criteriaType) {
-            return selectionAction + " " + criteriaType + " WHERE";
+        function getQuery() {
+            return "default_operator=AND&q=";
         }
 
-        function refinement(property, value) {
-            return " { " + property + " : '" + value + "' }";
+        function refine(attribute, value) {
+            return "(" + attribute + ":" + value + ")";
+        }
+
+        function negate(attribute, value) {
+            return "!" + refine(attribute, value);
+        }
+
+        function exactMatch(attribute, value) {
+            return "(" + attribute + ":\"" + value + "\")";
         }
 
         return {
             getQuery: getQuery,
-            refinement: refinement,
+            refine: refine,
+            negate: negate,
+            exactMatch: exactMatch,
             symbols: {
-                ALL: "All",
                 ACCOUNT_NUMBER: "accountNumber",
+                ALL: "All",
                 AMOUNT: "amount",
-                AUTHORIZATION_CODE: "authorizationCode",
-                CAR_ID: "carID",
-                CHECKPOINT: "checkpoint",
+                AUTHORIZATION_CODE: "authCode",
+                CAR_ID: "carId",
+                CHECKPOINT: "location",
                 CLAIM_NUMBER: "claimNumber",
                 CLIENT: "client",
                 CLIENT_LIST: "clientList",
@@ -56,7 +66,9 @@
                 CTU: "ctu",
                 DESTINATION: "destination",
                 DETAIL: "detail",
+                ELAPSED_TIME: "totalElapsedTime",
                 END_TIME: "endTime",
+                EXCLUDE_GENERIC_STRING: "excludeString",
                 FAILED: "failed",
                 FINDALL: "FINDALL",
                 FNOL_NUMBER: "fnolNumber",
@@ -65,15 +77,16 @@
                 GET: "GET",
                 IGNORE: "ignore",
                 INCLUDE_GENERIC_STRING: "includeString",
-                EXCLUDE_GENERIC_STRING: "excludeString",
                 INVOICE_NUMBER: "invoiceNumber",
                 ITEM: "item",
                 LOOKUP_TYPE: "lookupType",
                 MAX_TIME: "maxTime",
+                MESSAGE: "message",
                 MIN_TIME: "minTime",
-                ORDER_ID: "orderID",
+                ORDER_ID: "orderId",
                 OUTAGE: "outage",
                 PART_NUMBER: "partNumber",
+                PING_FLAG: "pingFlag",
                 PING_OPTION: "pingOptions",
                 POLICY_NUMBER: "policyNumber",
                 PROCESS: "process",
@@ -83,7 +96,7 @@
                 REFERRAL_DATE: "referralDate",
                 REFERRAL_NUMBER: "referralNumber",
                 SERVER_NAME: "serverName",
-                SESSION_ID: "sessionID",
+                SESSION_ID: "sessionId",
                 SHOP: "shop",
                 SHOP_NUMBER: "shopNumber",
                 SOURCE: "source",
@@ -91,14 +104,16 @@
                 START_TIME: "startTime",
                 SUB_COMPANY: "subCompany",
                 SUCCESS: "success",
+                TRANS_COMPLETED: 'transCompleted',
+                TRANS_START: "transTime",
                 TRANSACTION: "transaction",
                 TRANSACTION_DETAIL: "transactionDetail",
-                TRANSACTION_ID: "transactionid",
+                TRANSACTION_ID: "transactionId",
                 TRANSACTION_TYPE: "transactionType",
                 TRANSACTION_TYPE_LIST: "transactionTypeList",
                 WAREHOUSE_NUMBER: "warehouseNumber",
                 WHOLESALE: "wholesale",
-                WORK_ORDER_ID: "workOrderID",
+                WORK_ORDER_ID: "workOrderId",
                 WORK_ORDER_NUMBER: "workOrderNumber",
                 XREF_DATA: "xRefData",
                 ZIP_CODE: "zipCode"

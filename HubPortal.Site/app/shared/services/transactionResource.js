@@ -2,21 +2,19 @@
     "use strict";
 
     var app = angular.module("shared.services")
-        .factory("TransactionResource", ["$resource", "API", TransactionResource]);
+        .factory("TransactionResource", ["$resource", "API", "ELASTIC_SEARCH", TransactionResource]);
 
-    function TransactionResource($resource, API) {
+    function TransactionResource($resource, API, ELASTIC_SEARCH) {
         return $resource(API,
             {
-                controller: "Transaction",
-                action: "@action"
+                //controller: "transaction",
+                //action: "@action"
             },
             {
-                post: {
-                    controller: "Transaction",
-                    action: "@action",
-                    method: "POST",
-                    params: { queryString: "@queryString" },
-                    isArray: true
+                get: {
+                    url: ELASTIC_SEARCH,
+                    method: "GET",
+                    isArray: false
                 }
             }
         );

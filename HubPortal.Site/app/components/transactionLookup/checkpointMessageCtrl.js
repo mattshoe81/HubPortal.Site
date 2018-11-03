@@ -8,11 +8,6 @@
     function CheckpointMessageCtrl(CheckpointMessage) {
         var vm = this;
         vm.message = "Loading...";
-        CheckpointMessage.$promise.then(function (message) {
-            vm.message = message.messageData;
-        }, function (error) {
-            console.log("Unable to fetch checkpoint message", error.message);
-            message = "Unable to load checkpoint data";
-        });
+        vm.message = CheckpointMessage.hits.hits[0]._source.message;
     }
 }());
