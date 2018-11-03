@@ -8,6 +8,9 @@
     function CheckpointMessageCtrl(CheckpointMessage) {
         var vm = this;
         vm.message = "Loading...";
-        vm.message = CheckpointMessage.hits.hits[0]._source.message;
+
+        CheckpointMessage.$promise.then(function (result) {
+            vm.message = vkbeautify.xml(result.hits.hits[0]._source.message);
+        })
     }
 }());

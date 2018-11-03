@@ -89,7 +89,7 @@
                     controller: "CheckpointMessageCtrl as vm",
                     resolve: {
                         CheckpointMessage: ["CheckpointResource", "$stateParams", function (CheckpointResource, $stateParams) {
-                            return CheckpointResource.get({ q: "checkpointId:\"" + $stateParams.checkpointid + "\"" });
+                            return CheckpointResource.get({ q: "_id:\"" + $stateParams.checkpointid + "\"" });
                         }]
                     }
                 })

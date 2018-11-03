@@ -32,6 +32,7 @@
             var checkpoints = [];
             angular.forEach(results.hits.hits, function (searchResult) {
                 var checkpoint = searchResult._source;
+                checkpoint.id = searchResult._id;
                 checkpoints.push(checkpoint);
             });
             //checkpoints.sort((a, b) => (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0));
