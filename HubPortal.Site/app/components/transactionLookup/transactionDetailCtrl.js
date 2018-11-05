@@ -37,7 +37,7 @@
             checkpoints[0].time = new Date(checkpoints[0].time);
             previousCheckpointTime = checkpoints[0].time.getTime();
             angular.forEach(checkpoints, function (checkpoint) {
-                checkpoint.location = generateLocationMessage(checkpoint, vm.transaction)
+                checkpoint.location = generateLocationMessage(checkpoint, vm.transaction);
                 checkpoint.time = new Date(checkpoint.time);
                 checkpoint.elapsedTime = Math.abs(checkpoint.time.getTime() - previousCheckpointTime) / 1000.0;
                 previousCheckpointTime = checkpoint.time.getTime();

@@ -1734,8 +1734,8 @@
 
         vm.submit = function () {
             vm.loading = true;
-            vm.testQuery = TransactionQueryBuilderService.parseToQuery(vm.form);
-            TransactionQueryResource.query({ default_operator: "AND", q: vm.testQuery, size: 10000 }).$promise.then(
+            vm.query = TransactionQueryBuilderService.parseToQuery(vm.form);
+            TransactionQueryResource.query({ default_operator: "AND", q: vm.query, size: 10000 }).$promise.then(
                 function (response) {
                     var transactions = [];
                     angular.forEach(response.hits.hits, function (hit) {
@@ -1759,35 +1759,5 @@
                     vm.loading = false;
                 });
         };
-
-        ///*
-        // * Potentially a bad idea, but simplest solution to ensure local date when posting dates to api.
-        // * Javascript submits dates in UTC format, but they need to be local time to ensure correct query results.
-        // * Time zone doesnt matter since its just looking for the timestamp that is in the database.
-        // * AngularJS wont allow you to submit a string while bound to a datetime input.
-        // */
-        //Date.prototype.toJSON = function () {
-        //    // Just remove the offset, then convert to iso string.
-        //    var adjustedHour = this.getHours() - (this.getTimezoneOffset() / 60);
-        //    var localDate = new Date(this.getFullYear(), this.getMonth(), this.getDate(), adjustedHour, this.getMinutes(), 0);
-        //    return localDate.toISOString();
-        //}
-        //vm.submit = function () {
-        //    vm.loading = true;
-        //    TransactionQueryResource.post({ action: "PostData" }, vm.form).$promise.then(
-        //        function (response) {
-        //            // Map all the start times to a date object
-        //            response.map(transaction => transaction.transactionTime = new Date(transaction.transactionTime));
-        //            // Map null elapsed times to 0
-        //            response.map(transaction => transaction.totalElapsedTime ? void 0 : transaction.totalElapsedTime = 0);
-        //            // If no results, push empty string so the table will show
-        //            if (response.length < 1) response.push("");
-        //            vm.form.transactions = response;
-        //            vm.loading = false;
-        //        }, function (error) {
-        //            console.log("Unable to post form data", error);
-        //            vm.loading = false;
-        //        });
-        //};
     }
 }());

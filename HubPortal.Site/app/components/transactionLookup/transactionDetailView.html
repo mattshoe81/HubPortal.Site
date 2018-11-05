@@ -172,7 +172,7 @@
     <div class="title-panel">
         Checkpoints
     </div>
-    <div class="panel-body" ng-repeat="checkpoint in vm.checkpoints">
+    <div class="panel-body" ng-repeat="checkpoint in vm.checkpoints | orderBy: 'time'">
         <table>
             <tr>
                 <td class="label">Location:</td>

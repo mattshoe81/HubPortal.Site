@@ -64,7 +64,7 @@
                         {{transaction.checkpointCount}}
                     </td>
                     <td class="elapsed-column">
-                        <span ng-show="transaction">{{transaction.totalElapsedTime / 1000.000}}</span>
+                        <span ng-show="transaction">{{(transaction.totalElapsedTime / 1000.000) | number: 3}}</span>
                     </td>
                     <td class="success-column">
                         {{transaction.successful}}
