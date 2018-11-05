@@ -112,10 +112,10 @@
             var genericQuery = "";
             if (form.genericSearchString) {
                 if (form.excludeGenericString) {
-                    //genericQuery += QueryBuilderService.negate(symbols.MESSAGE, form.genericSearchString);
-                    genericQuery += "&q=!(" + form.genericSearchString + ")";
+                    genericQuery += QueryBuilderService.negate(symbols.MESSAGE, form.genericSearchString);
+                    //genericQuery += "&q=!(" + form.genericSearchString + ")";
                 } else {
-                    genericQuery += "&q=" + form.genericSearchString;
+                    genericQuery += QueryBuilderService.refine(symbols.MESSAGE, form.genericSearchString);
                 }
             }
             if (form.checkpoint !== symbols.ALL) genericQuery += QueryBuilderService.exactMatch(symbols.CHECKPOINT, form.checkpoint);

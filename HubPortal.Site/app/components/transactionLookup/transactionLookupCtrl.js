@@ -19,6 +19,11 @@
         //vm.clientList = ClientList;
         //vm.transactionTypeList = TransactionTypeList;
 
+        Date.prototype.addHours = function (hours) {
+            this.setTime(this.getTime() + (hours * 60 * 60 * 1000));
+            return this;
+        }
+
         vm.processList = [
             "1st Auto Name Search - Alliance ESL",
             "1st Auto Name Search - ESL",
@@ -1740,7 +1745,7 @@
                     var transactions = [];
                     angular.forEach(response.hits.hits, function (hit) {
                         var trans = hit._source;
-                        trans.transTime = new Date(trans.transTime);
+                        trans.transTime = new Date(trans.transTime).addHours(4);
                         if (trans.pingFlag)
                             if (trans.pingFlag === "Y") trans.pingFlag = "Yes";
                             else trans.pingFlag = "No";

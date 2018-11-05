@@ -12,6 +12,11 @@
         vm.zipApi = "";
         var previousCheckpointTime = 0;
 
+        Date.prototype.addHours = function (h) {
+            this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+            return this;
+        }
+
         // Process the checkpoints for this transaction once they're resolved
         Checkpoints.$promise.then(function (results) {
             var checkpoints = [];
@@ -38,7 +43,7 @@
             previousCheckpointTime = checkpoints[0].time.getTime();
             angular.forEach(checkpoints, function (checkpoint) {
                 checkpoint.location = generateLocationMessage(checkpoint, vm.transaction);
-                checkpoint.time = new Date(checkpoint.time);
+                checkpoint.time = new Date(checkpoint.time).addHours(4);
                 checkpoint.elapsedTime = Math.abs(checkpoint.time.getTime() - previousCheckpointTime) / 1000.0;
                 previousCheckpointTime = checkpoint.time.getTime();
             });

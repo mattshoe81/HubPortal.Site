@@ -28,7 +28,7 @@
             }
         }, true);
         // The order in which the transactions appear in the paginated list. Used in the ng-repeat orderBy filter
-        results.transactionSortCriteria = "+transactionTime";
+        results.transactionSortCriteria = "+transTime";
         // Current page of the pagination. Used in the ng-repeat startFrom filter to determine the starting index
         // of the results to display
         results.currentPage = 0;
